@@ -1,2 +1,987 @@
-test web kỉ yếu nha 
-hehehe
+<!DOCTYPE html>
+<html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Kỷ niệm học sinh – kiniemhocsinh.io.vn</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&family=Caveat:wght@600;700&family=Charm:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+/* ===== BIẾN GỐC CỦA WEB CHÍNH ===== */
+:root{
+  --ink:#1d2a4a;--sun:#ffd23f;--sky:#dfe9f7;--coral:#ff5d73;--paper:#fbfbf8;
+  /* Map Lucian UX tokens sang màu web chính */
+  --ux-page:var(--sky);
+  --ux-surface:#ffffff;
+  --ux-surface-2:#f5f3ef;
+  --ux-surface-3:#eae7e1;
+  --ux-ink:var(--ink);
+  --ux-ink-2:#57535f;
+  --ux-ink-3:#8e8a97;
+  --ux-line:rgba(29,42,74,.09);
+  --ux-line-2:rgba(29,42,74,.17);
+  --ux-accent:var(--coral);
+  --ux-accent-2:#2f8fe0;
+  --ux-accent-soft:rgba(255,93,115,.12);
+  --ux-accent-ink:#ffffff;
+  --ux-mint:#119c72;
+  --ux-warn:#d6731e;
+  --ux-danger:#d93a55;
+  --ux-glass:rgba(255,255,255,.58);
+  --ux-glass-line:rgba(255,255,255,.85);
+  --ux-shadow:rgba(29,42,74,.14);
+  --ux-shadow-strong:rgba(29,42,74,.3);
+  --ux-grad:linear-gradient(120deg,var(--coral),var(--sun) 55%,#1fb89a);
+  --ux-ease:cubic-bezier(.2,.8,.2,1);
+  --ux-spring:cubic-bezier(.34,1.45,.64,1);
+}
+body{font-family:'Be Vietnam Pro',sans-serif;background:var(--sky);color:var(--ink);padding-bottom:90px}
+.hand{font-family:'Caveat',cursive}
+.ul{background:linear-gradient(transparent 62%,var(--sun) 62%,var(--sun) 92%,transparent 92%);background-size:0 100%;background-repeat:no-repeat;animation:ul .9s .2s forwards}
+@keyframes ul{to{background-size:100% 100%}}
+.btn{background:var(--ink);color:#fff;border-radius:999px;padding:.6rem 1.2rem;font-weight:700}
+.btn.sun{background:var(--sun);color:var(--ink)} .btn.ghost{background:#fff;color:var(--ink);border:2px solid var(--ink)}
+.inp{width:100%;border:2px solid var(--ink);border-radius:12px;padding:.6rem .8rem;background:#fff}
+.card{background:var(--paper);border-radius:14px;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}
+.pol{background:#fff;padding:8px 8px 28px;box-shadow:0 4px 14px #1d2a4a33;position:relative;transition:transform .2s}
+.pol:nth-child(odd){transform:rotate(-1.5deg)}.pol:nth-child(even){transform:rotate(1.2deg)}
+
+/* ===== #258 – Skeleton / Blur-up nâng cấp ===== */
+.blur-up{position:relative;overflow:hidden}
+.blur-up img{filter:blur(14px);transition:filter .6s;width:100%;height:100%;object-fit:cover;display:block}
+.blur-up img.ok{filter:none}
+.blur-up::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.35) 50%,transparent 65%);
+  background-size:250% 100%;
+  animation:kysh 1.4s linear infinite;
+  z-index:1;pointer-events:none;
+  transition:opacity .4s;
+}
+.blur-up img.ok ~ .blur-up::before,.blur-up.loaded::before{opacity:0}
+@keyframes kysh{from{background-position:130% 0}to{background-position:-30% 0}}
+.blur-up img.ok{filter:none}
+/* Khi ảnh ok thì tắt shimmer */
+.blur-up:has(img.ok)::before{opacity:0;animation:none}
+
+.pill{position:relative;display:flex;background:#fff;border-radius:999px;border:2px solid var(--ink);padding:3px}
+.pill button{flex:1;padding:.5rem;border-radius:999px;font-weight:700;position:relative;z-index:1;transition:color .3s}
+.pill i{position:absolute;top:3px;bottom:3px;width:calc(50% - 3px);background:var(--ink);border-radius:999px;transition:transform .5s cubic-bezier(.34,1.45,.64,1)}
+
+/* ===== #369 – Fan ảnh xòe quạt ===== */
+.fan{position:relative;height:230px;margin:0 auto;width:280px;cursor:pointer}
+.fan .kyfan-p{position:absolute;left:50%;top:10px;width:150px;height:185px;object-fit:cover;border:8px solid #fff;border-bottom-width:30px;box-shadow:0 8px 20px #0003;transform-origin:50% 120%;transition:transform .7s cubic-bezier(.3,1.2,.4,1);margin-left:-75px;border-radius:4px}
+.fan.fanned .kyfan-p{transition-delay:calc(var(--fi,0)*40ms)}
+
+/* ===== #048 – Swipe tabs ===== */
+.kytab-wrap{position:relative;overflow:hidden}
+.kytab-bar{position:relative;display:flex;padding:3px;border-radius:999px;background:#fff;border:2px solid var(--ink)}
+.kytab-pill{position:absolute;top:3px;bottom:3px;width:calc(50% - 3px);background:var(--ink);border-radius:999px;transition:transform .5s cubic-bezier(.34,1.45,.64,1)}
+.kytab-btn{flex:1;padding:.5rem;border-radius:999px;font-weight:700;position:relative;z-index:1;transition:color .3s;border:0;background:none;cursor:pointer}
+.kytab-line{position:absolute;left:0;bottom:-2px;height:3px;border-radius:3px 3px 0 0;background:var(--ux-grad);pointer-events:none;transition:width .3s,transform .3s}
+.kytab-pages{display:flex;overflow-x:hidden;scroll-snap-type:x mandatory;scroll-behavior:smooth}
+.kytab-page{flex:none;width:100%;scroll-snap-align:start}
+
+/* ===== Sheet ===== */
+.sheet{position:fixed;inset:0;background:#0007;z-index:60;display:flex;align-items:flex-end;justify-content:center}
+.sheet>div{background:var(--paper);width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:1.2rem;animation:up .3s}
+@keyframes up{from{transform:translateY(100%)}}
+@media(min-width:640px){.sheet{align-items:center}.sheet>div{border-radius:22px}}
+
+/* ===== #474 – Music player glass ===== */
+#mp{
+  position:fixed;right:3px;bottom:4px;z-index:50;
+  background:rgba(255,255,255,.55);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);
+  border:1px solid rgba(255,255,255,.85);box-shadow:inset 0 0 0 1px rgba(255,255,255,.5),0 10px 28px rgba(29,42,74,.25);
+  border-radius:18px;padding:8px 10px 8px 8px;
+  display:flex;align-items:center;gap:8px;
+  min-width:0;
+}
+.kymp-art{flex:none;width:38px;height:38px;border-radius:10px;overflow:hidden;position:relative}
+.kymp-art img,.kymp-art-inner{width:100%;height:100%;object-fit:cover}
+.kymp-art-inner{display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,var(--sun) 0 18%,#111 19% 100%);border-radius:50%}
+.kymp-spin{animation:sp 3s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+.kymp-info{flex:1;min-width:0;max-width:90px}
+.kymp-title{font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+/* Play/pause clip-path animation */
+.kymp-ic{position:relative;width:14px;height:16px;display:inline-block}
+.kymp-ic i{position:absolute;inset:0;background:var(--ink);transition:clip-path .3s cubic-bezier(.5,0,.2,1.2)}
+.kymp-ic i:first-child{clip-path:polygon(0% 0%,50% 25%,50% 75%,0% 100%)}
+.kymp-ic i:last-child{clip-path:polygon(50% 25%,100% 50%,100% 50%,50% 75%)}
+.kymp-playing .kymp-ic i:first-child{clip-path:polygon(2% 0%,38% 0%,38% 100%,2% 100%)}
+.kymp-playing .kymp-ic i:last-child{clip-path:polygon(62% 0%,98% 0%,98% 100%,62% 100%)}
+/* Seek bar */
+.kymp-seek{flex:1;height:18px;cursor:pointer;min-width:50px;max-width:70px;display:flex;align-items:center}
+.kymp-track{position:relative;width:100%;height:4px;border-radius:3px;background:rgba(29,42,74,.18);overflow:hidden}
+.kymp-fill{position:absolute;left:0;top:0;bottom:0;background:var(--coral);border-radius:3px;width:0;transition:width .3s linear}
+
+/* ===== #429 – Search combobox ===== */
+.kysrc{position:relative}
+.kysrc-f{position:relative;z-index:2;display:flex;align-items:center;gap:8px;height:44px;padding:0 8px 0 12px;border-radius:14px;background:#fff;border:2px solid var(--ink);transition:box-shadow .2s}
+.kysrc-f:focus-within{box-shadow:0 0 0 3px rgba(255,93,115,.2)}
+.kysrc-f>svg{flex:none;width:16px;height:16px;fill:none;stroke:var(--ux-ink-3);stroke-width:2;stroke-linecap:round}
+.kysrc-in{flex:1;min-width:0;border:0;background:none;outline:none;font-size:14px;font-weight:500;color:var(--ink)}
+.kysrc-in::placeholder{color:var(--ux-ink-3)}
+.kysrc-dd{position:absolute;left:0;right:0;top:calc(100% + 6px);border-radius:14px;background:#fff;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);overflow:hidden;transform-origin:50% 0;opacity:0;transform:translateY(-8px) scale(.96);visibility:hidden;transition:opacity .16s,transform .2s,visibility 0s linear .2s;z-index:30}
+.kysrc.is-open .kysrc-dd{opacity:1;transform:none;visibility:visible;transition:opacity .18s,transform .3s cubic-bezier(.3,1.4,.5,1),visibility 0s}
+.kysrc-pill{position:absolute;left:4px;right:4px;top:4px;height:38px;border-radius:9px;background:rgba(29,42,74,.07);transform:translateY(var(--py,0px));opacity:var(--po,0);transition:transform .4s cubic-bezier(.3,1.5,.5,1),opacity .15s;pointer-events:none}
+.kysrc-o{position:relative;display:flex;align-items:center;gap:10px;height:38px;padding:0 10px;border-radius:9px;cursor:pointer;color:var(--ux-ink-2)}
+.kysrc-o[aria-selected="true"]{color:var(--ink)}
+.kysrc-t{flex:1;min-width:0;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kysrc-t mark{background:none;color:var(--coral);font-weight:700}
+.kysrc-m{flex:none;font-size:11px;color:var(--ux-ink-3)}
+.kysrc-no{padding:10px;font-size:13px;color:var(--ux-ink-3)}
+
+/* ===== OTP / mã lớp ===== */
+.kyotp-wrap{position:relative;display:flex;gap:6px;justify-content:center;margin:12px 0}
+.kyotp-c{
+  position:relative;width:46px;height:56px;border-radius:12px;
+  background:#fff;box-shadow:inset 0 0 0 1.5px rgba(29,42,74,.18);
+  display:grid;place-items:center;overflow:hidden;
+  font-size:24px;font-weight:760;font-variant-numeric:tabular-nums;
+  transition:box-shadow .25s,background-color .4s,color .4s,transform .45s cubic-bezier(.34,1.45,.64,1)
+}
+.kyotp-c span{display:block;animation:kyotp-in .4s cubic-bezier(.34,1.45,.64,1)}
+@keyframes kyotp-in{from{transform:translateY(70%);opacity:0}}
+.kyotp-c.cur{box-shadow:inset 0 0 0 2px var(--coral),0 0 0 3px rgba(255,93,115,.15)}
+.kyotp-c.cur::after{content:"";position:absolute;left:50%;top:14px;bottom:14px;width:2px;margin-left:-1px;border-radius:1px;background:var(--coral);animation:kyotp-blink 1s steps(1) infinite}
+.kyotp-c.cur.has::after{display:none}
+@keyframes kyotp-blink{50%{opacity:0}}
+.kyotp-wrap.is-ok .kyotp-c{background:rgba(17,156,114,.12);box-shadow:inset 0 0 0 2px var(--ux-mint);color:var(--ux-mint);animation:kyotp-wave .5s cubic-bezier(.2,.8,.2,1);animation-delay:calc(var(--i)*60ms)}
+@keyframes kyotp-wave{40%{transform:translateY(-6px)}}
+.kyotp-wrap.is-bad{animation:kyotp-shake .45s cubic-bezier(.36,.07,.19,.97)}
+.kyotp-wrap.is-bad .kyotp-c{box-shadow:inset 0 0 0 2px var(--coral);color:var(--coral)}
+@keyframes kyotp-shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(7px)}}
+.kyotp-real{position:absolute;inset:0;width:100%;opacity:0;border:0;font-size:16px;cursor:text;caret-color:transparent;color:transparent;background:transparent}
+
+/* ===== #480 – PIN pad chấm ===== */
+.kypin-wrap{padding:12px 0}
+.kypin-dots{display:flex;justify-content:center;gap:14px;height:36px;align-items:center;margin:4px 0;position:relative}
+.kypin-d{width:12px;height:12px;border-radius:50%;background:rgba(29,42,74,.18);box-shadow:inset 0 0 0 1px rgba(29,42,74,.2);transition:background-color .2s,transform .5s cubic-bezier(.5,0,.2,1)}
+.kypin-d.on{background:var(--ink);box-shadow:none;animation:kypin-pop .42s cubic-bezier(.34,1.9,.5,1)}
+@keyframes kypin-pop{0%{transform:scale(.4)}55%{transform:scale(1.45)}100%{transform:scale(1)}}
+.kypin-d.off{animation:kypin-out .25s cubic-bezier(.2,.8,.2,1)}
+@keyframes kypin-out{from{transform:scale(1.3);background:var(--ink)}}
+.kypin-dots.is-bad .kypin-d{background:var(--coral);box-shadow:none}
+.kypin-dots.is-shake{animation:kypin-shake .5s cubic-bezier(.36,.07,.19,.97)}
+@keyframes kypin-shake{12%,52%{transform:translateX(-9px)}32%,72%{transform:translateX(9px)}88%{transform:translateX(-3px)}}
+.kypin-ok{position:absolute;left:50%;top:50%;width:32px;height:32px;margin:-16px 0 0 -16px;border-radius:50%;background:var(--ux-mint);display:grid;place-items:center;transform:scale(0);pointer-events:none}
+.kypin-dots.is-ok .kypin-d{opacity:0;transform:translateX(var(--kptx,0)) scale(.6);transition:transform .38s cubic-bezier(.6,0,.4,1),opacity .2s .26s}
+.kypin-dots.is-ok .kypin-ok{animation:kypin-okpop .55s cubic-bezier(.34,1.8,.5,1) .3s forwards}
+@keyframes kypin-okpop{0%{transform:scale(.3)}100%{transform:scale(1)}}
+.kypin-ok svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.kypin-ok path{stroke-dasharray:22;stroke-dashoffset:22}
+.kypin-dots.is-ok .kypin-ok path{animation:kypin-draw .35s cubic-bezier(.2,.8,.2,1) .55s forwards}
+@keyframes kypin-draw{to{stroke-dashoffset:0}}
+.kypin-pad{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:44px;gap:4px;margin-top:8px}
+.kypin-k{position:relative;display:grid;place-items:center;padding:0;border:0;border-radius:14px;background:none;color:var(--ink);font-size:22px;font-weight:600;cursor:pointer;font-variant-numeric:tabular-nums;transition:transform .15s}
+.kypin-k::before{content:"";position:absolute;left:50%;top:50%;width:48px;height:40px;margin:-20px 0 0 -24px;border-radius:12px;background:rgba(29,42,74,.07);opacity:0;transform:scale(.5);transition:opacity .25s,transform .4s cubic-bezier(.34,1.6,.5,1)}
+.kypin-k:hover::before{opacity:.7;transform:scale(.9)}
+.kypin-k:active::before,.kypin-k.dn::before{opacity:1;transform:scale(1.05);transition-duration:.08s,.12s}
+.kypin-k span{position:relative}
+.kypin-fn{font-size:12px;font-weight:700;color:var(--ux-ink-2)}
+.kypin-fn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.kypin-err{font-size:12px;color:var(--coral);text-align:center;min-height:18px;margin:4px 0 0}
+
+/* ===== #022 – Like burst nâng cấp ===== */
+.ky22-wrap{position:relative;display:inline-block}
+.ky22-ring{position:absolute;left:50%;top:50%;width:48px;height:48px;margin:-24px;border-radius:50%;border:10px solid #FF7A93;transform:scale(0);opacity:0;pointer-events:none}
+.ky22-wrap.is-pop .ky22-ring{animation:ky22-ring .6s cubic-bezier(.2,.8,.2,1) .05s}
+@keyframes ky22-ring{0%{transform:scale(.3);opacity:1;border-width:14px}100%{transform:scale(1.6);opacity:0;border-width:0}}
+.ky22-dot{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none;transform:rotate(var(--a))}
+.ky22-dot i{position:absolute;width:8px;height:8px;margin:-4px;border-radius:50%;background:var(--c);opacity:0}
+.ky22-wrap.is-pop .ky22-dot i{animation:ky22-fly .65s cubic-bezier(.2,.8,.2,1) .15s}
+@keyframes ky22-fly{0%{opacity:1;transform:translate(0,-36px) scale(1)}100%{opacity:0;transform:translate(0,-72px) scale(.2)}}
+.ky22-cnt{display:inline-block;overflow:hidden;height:18px;vertical-align:middle;font-variant-numeric:tabular-nums}
+.ky22-cnt span{display:block;line-height:18px;transition:transform .45s cubic-bezier(.34,1.45,.64,1),opacity .3s}
+
+/* ===== #061 – Lightbox toàn màn hình ===== */
+#kylb-overlay{position:fixed;inset:0;z-index:70;background:#000a;display:flex;align-items:center;justify-content:center;animation:kylb-in .25s}
+@keyframes kylb-in{from{opacity:0}}
+#kylb-overlay img{max-width:100%;max-height:100%;object-fit:contain;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+#kylb-overlay button{position:absolute;background:rgba(0,0,0,.45);border:0;color:#fff;font-size:1.8rem;border-radius:50%;width:48px;height:48px;display:grid;place-items:center;cursor:pointer}
+#kylb-prev{left:12px}#kylb-next{right:12px}#kylb-close{top:14px;right:14px;font-size:1.3rem}
+#kylb-overlay .kylb-zoom-label{position:absolute;top:14px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.4);color:#fff;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;opacity:0;transition:opacity .3s}
+#kylb-overlay.zoomed .kylb-zoom-label{opacity:1}
+
+/* ===== #032/#075 – Drop zone nâng cấp ===== */
+.kydrop{position:relative;border-radius:20px;background:#fff;border:2px dashed rgba(29,42,74,.3);text-align:center;padding:20px 16px;cursor:pointer;transition:transform .4s cubic-bezier(.34,1.45,.64,1),background .3s,border-color .3s}
+.kydrop svg.kydrop-dash{position:absolute;left:1px;top:1px;width:calc(100% - 2px);height:calc(100% - 2px);overflow:visible;pointer-events:none;border-radius:19px}
+.kydrop-dash rect{fill:none;stroke:rgba(29,42,74,.25);stroke-width:2;stroke-dasharray:8 7;transition:stroke .3s}
+.kydrop:hover .kydrop-dash rect,.kydrop.is-over .kydrop-dash rect{stroke:var(--coral);animation:kydrop-march .9s linear infinite}
+@keyframes kydrop-march{to{stroke-dashoffset:-30}}
+.kydrop.is-over{transform:scale(1.02);background:rgba(255,93,115,.04);border-color:transparent}
+.kydrop-orb{width:48px;height:48px;border-radius:16px;background:linear-gradient(140deg,var(--coral),var(--sun));box-shadow:0 12px 22px -10px rgba(255,93,115,.6);display:grid;place-items:center;margin:0 auto 10px;transition:transform .5s cubic-bezier(.34,1.45,.64,1)}
+.kydrop-orb svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.kydrop:hover .kydrop-orb{transform:translateY(-4px)}
+.kydrop.is-over .kydrop-orb{transform:translateY(-8px) scale(1.1) rotate(-5deg)}
+.kyup-list{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-direction:column;gap:6px}
+.kyup-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:#fff;border:2px solid var(--ink);position:relative;overflow:hidden;animation:kyup-in .4s cubic-bezier(.34,1.45,.64,1)}
+@keyframes kyup-in{from{transform:translateY(-8px) scale(.96);opacity:0}}
+.kyup-name{flex:1;min-width:0;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kyup-pct{font-size:11px;color:var(--ux-ink-3);font-variant-numeric:tabular-nums;min-width:30px;text-align:right}
+.kyup-bar{position:absolute;left:0;bottom:0;height:3px;background:var(--coral);transform-origin:0 50%;transition:transform .2s linear}
+.kyup-row.done .kyup-bar{background:var(--ux-mint)}
+
+/* ===== #472 – Admin storage bar ===== */
+.kyst-bar{position:relative;display:flex;gap:2px;height:24px;border-radius:6px;overflow:hidden;margin:8px 0 4px}
+.kyst-seg{flex:none;height:100%;transition:width .9s cubic-bezier(.22,.9,.24,1),opacity .3s;width:0}
+.kyst-seg.loaded{width:var(--w)}
+.kyst-seg:first-child{border-radius:6px 0 0 6px}
+.kyst-seg:last-child{flex:1;border-radius:0 6px 6px 0;background:rgba(29,42,74,.08)}
+.kyst-legend{display:flex;flex-wrap:wrap;gap:4px 10px;margin-top:6px}
+.kyst-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--ux-ink-2)}
+.kyst-item i{width:8px;height:8px;border-radius:50%}
+
+/* ===== #269 – Confirm delete nâng cấp ===== */
+.kydel-name{display:inline-flex;margin-bottom:8px;padding:4px 8px;border-radius:8px;background:#f5f3ef;font-family:ui-monospace,monospace;font-size:14px;font-weight:800}
+.kydel-name span{transition:color .15s}
+.kydel-name span.is-ok{color:var(--coral)}
+.kydel-in{display:block;width:100%;height:42px;padding:0 12px;border:0;border-radius:11px;background:#f5f3ef;box-shadow:inset 0 0 0 1.5px rgba(29,42,74,.17);color:var(--ink);font-family:ui-monospace,monospace;font-size:14px;font-weight:700;outline:none;box-sizing:border-box;margin-bottom:10px}
+.kydel-in:focus{box-shadow:inset 0 0 0 2px var(--coral)}
+.kydel-in.is-shake{animation:kydel-sh .35s}
+@keyframes kydel-sh{25%,75%{transform:translateX(-4px)}50%{transform:translateX(4px)}}
+
+/* ===== #069 – Crop avatar ===== */
+.kycrop-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;padding:12px 0}
+.kycrop-view{position:relative;width:240px;height:240px;border-radius:16px;overflow:hidden;background:#0d0c14;cursor:grab;touch-action:none}
+.kycrop-view.drag{cursor:grabbing}
+.kycrop-img{position:absolute;left:0;top:0;width:240px;height:240px;transition:transform .4s cubic-bezier(.34,1.45,.64,1)}
+.kycrop-view.drag .kycrop-img,.kycrop-view.now .kycrop-img{transition:none}
+.kycrop-img svg{display:block;width:100%;height:100%}
+.kycrop-shade{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle 100px at 50% 50%,transparent 99%,rgba(8,6,16,.65) 100%)}
+.kycrop-ring{position:absolute;left:20px;top:20px;width:200px;height:200px;border-radius:50%;box-shadow:inset 0 0 0 2px rgba(255,255,255,.85);pointer-events:none}
+.kycrop-grid{position:absolute;left:20px;top:20px;width:200px;height:200px;border-radius:50%;overflow:hidden;pointer-events:none;opacity:0;transition:opacity .25s;background:linear-gradient(90deg,transparent calc(33.33% - .5px),rgba(255,255,255,.5) calc(33.33% - .5px) calc(33.33% + .5px),transparent calc(33.33% + .5px)),linear-gradient(0deg,transparent calc(33.33% - .5px),rgba(255,255,255,.5) calc(33.33% - .5px) calc(33.33% + .5px),transparent calc(33.33% + .5px))}
+.kycrop-view.drag .kycrop-grid{opacity:1}
+.kycrop-tools{display:flex;align-items:center;gap:8px;width:240px}
+.kycrop-z{flex:1;-webkit-appearance:none;appearance:none;height:24px;background:none;cursor:pointer}
+.kycrop-z::-webkit-slider-runnable-track{height:5px;border-radius:3px;background:linear-gradient(90deg,var(--coral) var(--f,0%),rgba(29,42,74,.18) var(--f,0%))}
+.kycrop-z::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;margin-top:-6.5px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.kycrop-rot{width:36px;height:36px;flex:none;border:2px solid var(--ink);border-radius:10px;display:grid;place-items:center;background:#fff;cursor:pointer}
+.kycrop-rot svg{width:16px;height:16px;fill:none;stroke:var(--ink);stroke-width:1.8;stroke-linecap:round}
+.kycrop-prev{width:64px;height:64px;border-radius:50%;overflow:hidden;border:3px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.2);flex:none}
+.kycrop-prev-img{width:100%;height:100%;object-fit:cover}
+.kycrop-fly{position:absolute;width:200px;height:200px;border-radius:50%;overflow:hidden;z-index:5;pointer-events:none;top:0;left:0}
+
+/* ===== Misc ===== */
+.bar{height:10px;background:#fff;border:2px solid var(--ink);border-radius:9px;overflow:hidden}.bar>b{display:block;height:100%;background:var(--coral);transition:width .3s}
+.stk{display:flex;flex-direction:column;justify-content:space-between;min-height:150px;padding:18px 14px 20px;background:var(--c);transform:rotate(var(--r));font-family:'Charm',cursive;font-size:1.08rem;line-height:1.35;position:relative;filter:drop-shadow(0 6px 8px #1d2a4a30);clip-path:polygon(0 0,100% 0,100% 94%,95% 98%,88% 94%,80% 99%,70% 95%,60% 98%,50% 94%,40% 99%,30% 95%,20% 98%,10% 94%,0 98%);transition:transform .3s cubic-bezier(.34,1.45,.64,1)}
+.stk:hover{transform:rotate(0) translateY(-4px) scale(1.04);z-index:2}
+.stk::after{content:"";position:absolute;right:10px;top:8px;width:10px;height:10px;border-radius:50%;background:#0002;box-shadow:inset 0 0 0 2px #fff6}
+.stk span{text-align:right;font-size:.95rem;opacity:.85;margin-top:10px}
+.stk button{position:absolute;left:8px;top:6px;font:12px sans-serif;text-decoration:underline;opacity:.6}
+.plane{transition:transform .8s,opacity .8s}.plane.fly{transform:translate(120px,-80px) rotate(20deg);opacity:0}
+.mini{position:fixed!important;left:10px;bottom:84px;width:210px;z-index:40;box-shadow:0 6px 20px #0006}
+:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head>
+<body>
+<div id="app" class="max-w-3xl mx-auto px-4 pt-4"></div>
+
+<!-- ===== #474 – Music Player nâng cấp ===== -->
+<div id="mp">
+  <button id="mpv" aria-label="Phát/dừng nhạc" style="background:none;border:0;padding:0;cursor:pointer">
+    <div class="kymp-art">
+      <div class="kymp-art-inner" id="mpvinyl" style="width:38px;height:38px;border-radius:50%">
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="10" fill="radial-gradient(circle,#ffd23f 0 40%,#111 41%)"/><circle cx="11" cy="11" r="4" fill="#111"/><circle cx="11" cy="7" r="1.2" fill="#ffd23f" opacity=".7"/></svg>
+      </div>
+    </div>
+    <span class="kymp-ic" id="mpic"><i></i><i></i></span>
+  </button>
+  <div class="kymp-info">
+    <span class="kymp-title" id="mptitle">Kỷ niệm 1</span>
+    <div class="kymp-seek" id="mpseek" title="Seek">
+      <div class="kymp-track"><div class="kymp-fill" id="mpfill"></div></div>
+    </div>
+  </div>
+  <button id="mpn" style="background:none;border:0;font-size:14px;cursor:pointer;padding:2px" aria-label="Chuyển bài">⏭</button>
+  <button id="mpm" style="background:none;border:0;font-size:13px;cursor:pointer;padding:2px" aria-label="Tắt tiếng">🔊</button>
+  <select id="mps" style="font-size:11px;background:transparent;border:0;max-width:80px;cursor:pointer"></select>
+</div>
+<audio id="au" loop></audio>
+<div id="modal"></div><div id="toast" class="fixed top-3 left-1/2 -translate-x-1/2 z-[80]"></div>
+
+<script type="module">
+/* ============ CẤU HÌNH ============ */
+const CONFIG={
+ cloudName:"[ĐIỀN_CLOUD_NAME]", uploadPreset:"ki_niem_upload",
+ firebaseConfig:"[// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBbbapYSmvnZPKEnhoFLRo0NpwzwUPBYEs",
+  authDomain: "web-ki-niem.firebaseapp.com",
+  projectId: "web-ki-niem",
+  storageBucket: "web-ki-niem.firebasestorage.app",
+  messagingSenderId: "119667358223",
+  appId: "1:119667358223:web:d0033092f61512635f817a"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);]",
+ adminPass:"admin123",
+ domain:"kiniemhocsinh.io.vn",
+ tracks:[{n:"Kỷ niệm 1",u:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"},{n:"Kỷ niệm 2",u:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3"},{n:"Kỷ niệm 3",u:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3"}]
+};
+const FB=typeof CONFIG.firebaseConfig==="object", CL=!CONFIG.cloudName.startsWith("[");
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid=()=>Math.random().toString(36).slice(2,10);
+const sha=async t=>[...new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t)))].map(b=>b.toString(16).padStart(2,"0")).join("");
+const slug=s=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/đ/g,"d").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+const toast=m=>{const t=$("#toast");t.innerHTML=`<div class="btn sun shadow-lg">${esc(m)}</div>`;setTimeout(()=>t.innerHTML="",2500)};
+const COLS=["schools","classes","members","photos","videos","notes","settings"];
+const pic=(n,w=400,h=500)=>`https://picsum.photos/seed/ky${n}/${w}/${h}`;
+
+/* ============ DATA LAYER ============ */
+let S={},fs=null,fdb=null;
+const seed=()=>({
+ schools:[{id:"s1",name:"THPT Nguyễn Đình Chiểu",slug:"thpt-nguyen-dinh-chieu",cover:pic(1,600,300)},{id:"s2",name:"THPT Sa Đéc",slug:"thpt-sa-dec",cover:pic(2,600,300)}],
+ classes:[{id:"c1",schoolId:"s1",name:"12A1",year:"2023–2026",note:"Lớp mình mãi bên nhau 💛",code:"62826",passHash:"",pass:"lop123",music:"",cover:pic(3,600,300)},{id:"c2",schoolId:"s1",name:"12A2",year:"2023–2026",note:"Tuổi trẻ rực rỡ",code:"11223",pass:"lop123",music:""}],
+ members:[{id:"m1",classId:"c1",name:"Minh Anh",quote:"Mãi là thanh xuân",pin:"1234",avatar:pic(11,200,200)},{id:"m2",classId:"c1",name:"Quốc Bảo",quote:"Cười lên nào!",pin:"1234",avatar:pic(12,200,200)}],
+ photos:[1,2,3,4,5,6].map(i=>({id:"p"+i,classId:"c1",memberId:i>4?"m1":null,url:pic(20+i),hearts:i})),
+ videos:[{id:"v1",classId:"c1",url:"https://www.youtube.com/watch?v=jfKfPfyJRdk"}],
+ notes:[{id:"n1",classId:"c1",author:"Cô chủ nhiệm",text:"Chúc các em luôn vững bước!",ts:Date.now()-864e5}],
+ settings:[{id:"cfg",limit:1,resets:[]}]});
+const db={async load(){
+  if(FB){try{const A=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"),F=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+   fs=F;fdb=F.getFirestore(A.initializeApp(CONFIG.firebaseConfig));
+   for(const c of COLS){const q=await F.getDocs(F.collection(fdb,c));S[c]=q.docs.map(d=>({id:d.id,...d.data()}))}
+   if(!S.settings.length)await db.set("settings",{id:"cfg",limit:1,resets:[]});return}catch(e){console.warn("Firebase lỗi → Demo",e)}}
+  const l=localStorage.getItem("ky_demo");S=l?JSON.parse(l):seed();COLS.forEach(c=>S[c]??=[]);save()},
+ async set(c,o){const i=S[c].findIndex(x=>x.id===o.id);i<0?S[c].push(o):S[c][i]=o;save();if(fdb)await fs.setDoc(fs.doc(fdb,c,o.id),JSON.parse(JSON.stringify(o)))},
+ async del(c,id){S[c]=S[c].filter(x=>x.id!==id);save();if(fdb)await fs.deleteDoc(fs.doc(fdb,c,id))}};
+const save=()=>{if(!fdb)localStorage.setItem("ky_demo",JSON.stringify(S))};
+const cfg=()=>S.settings.find(s=>s.id==="cfg")||{limit:1,resets:[]};
+const by=(c,k,v)=>S[c].filter(x=>x[k]===v);
+const get=(c,id)=>S[c].find(x=>x.id===id);
+
+/* ============ ẢNH ============ */
+const opt=(u,w)=>u.includes("/upload/")?u.replace("/upload/",`/upload/f_auto,q_auto${w?",w_"+w:""}/`):u;
+// #258 – img với skeleton shimmer
+const img=(u,w,cls="")=>`<div class="blur-up ${cls}"><img loading="lazy" src="${esc(opt(u,w))}" onload="this.classList.add('ok')" alt=""></div>`;
+// img raw (không wrapper)
+const imgRaw=(u,w,cls="")=>`<img loading="lazy" class="blur-up-img ${cls}" src="${esc(opt(u,w))}" onload="this.classList.add('ok')" alt="">`;
+
+async function upload(file,onp){
+  if(!CL)return new Promise(r=>{let p=0;const t=setInterval(()=>{onp(p+=25);if(p>=100){clearInterval(t);const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(file)}},120)});
+  return new Promise((res,rej)=>{const x=new XMLHttpRequest(),fd=new FormData();fd.append("file",file);fd.append("upload_preset",CONFIG.uploadPreset);
+   x.open("POST",`https://api.cloudinary.com/v1_1/${CONFIG.cloudName}/image/upload`);x.upload.onprogress=e=>onp(e.loaded/e.total*100);
+   x.onload=()=>x.status<300?res(JSON.parse(x.responseText).secure_url):rej();x.onerror=rej;x.send(fd)})}
+function embed(u){let m;
+  if(m=u.match(/(?:youtu\.be\/|v=|shorts\/)([\w-]{11})/))return`https://www.youtube.com/embed/${m[1]}`;
+  if(m=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/))return`https://drive.google.com/file/d/${m[1]}/preview`;
+  if(m=u.match(/tiktok\.com\/.*video\/(\d+)/))return`https://www.tiktok.com/embed/v2/${m[1]}`;return null}
+async function cropSquare(file,size=256){const b=await createImageBitmap(file),s=Math.min(b.width,b.height),c=document.createElement("canvas");c.width=c.height=size;
+  c.getContext("2d").drawImage(b,(b.width-s)/2,(b.height-s)/2,s,s,0,0,size,size);return new Promise(r=>c.toBlob(r,"image/jpeg",.85))}
+
+/* ============ #474 – NHẠC NỀN NÂNG CẤP ============ */
+const au=$("#au"),sel=$("#mps");let ti=0,started=false,seekDrag=false;
+sel.innerHTML=CONFIG.tracks.map((t,i)=>`<option value="${i}">${esc(t.n)}</option>`).join("");
+const setTrack=(i,u)=>{ti=i;au.src=u||CONFIG.tracks[i].u;$("#mptitle").textContent=CONFIG.tracks[i]?.n||"";if(started)au.play().catch(()=>{})};
+const vinSpin=()=>{const v=$("#mpvinyl");v.classList.toggle("kymp-spin",!au.paused);$("#mp").classList.toggle("kymp-playing",!au.paused)};
+au.onplay=au.onpause=vinSpin;
+// Seek bar
+au.ontimeupdate=()=>{if(!seekDrag&&au.duration){$("#mpfill").style.width=(au.currentTime/au.duration*100)+"%"}};
+const mpseek=$("#mpseek");
+mpseek.addEventListener("pointerdown",e=>{seekDrag=true;mpseek.setPointerCapture(e.pointerId);const r=mpseek.getBoundingClientRect();if(au.duration)au.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*au.duration});
+mpseek.addEventListener("pointermove",e=>{if(!seekDrag)return;const r=mpseek.getBoundingClientRect();if(au.duration)au.currentTime=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*au.duration});
+mpseek.addEventListener("pointerup",()=>{seekDrag=false});
+setTrack(0);
+$("#mpv").onclick=()=>{started=true;au.paused?au.play():au.pause()};
+$("#mpn").onclick=()=>{started=true;sel.value=(ti+1)%CONFIG.tracks.length;setTrack(+sel.value)};
+sel.onchange=()=>setTrack(+sel.value);
+$("#mpm").onclick=()=>{au.muted=!au.muted;$("#mpm").textContent=au.muted?"🔇":"🔊"};
+const first=()=>{if(!started){started=true;au.volume=.35;au.play().catch(()=>{started=false})}["touchstart","scroll","click"].forEach(e=>removeEventListener(e,first))};
+["touchstart","scroll","click"].forEach(e=>addEventListener(e,first,{passive:true}));
+
+/* ============ THIẾT BỊ ============ */
+const fp=await sha([navigator.userAgent,screen.width,screen.height,navigator.language,new Date().getTimezoneOffset()].join("|"));
+let ip="";try{ip=(await (await fetch("https://api.ipify.org?format=json")).json()).ip}catch{}
+const devId=(()=>{let d=localStorage.getItem("ky_dev");if(!d)localStorage.setItem("ky_dev",d=uid()+uid());return d})();
+const myClassCount=()=>{const c=cfg();if((c.resets||[]).includes(fp))return 0;return S.classes.filter(x=>x.devId===devId||x.fp===fp||(ip&&x.ip===ip)).length};
+const isAdmin=()=>sessionStorage.getItem("ky_admin")==="1";
+const store=(k,v)=>v===undefined?JSON.parse(localStorage.getItem(k)||"null"):localStorage.setItem(k,JSON.stringify(v));
+const canMod=cid=>isAdmin()||sessionStorage.getItem("mod_"+cid)==="1";
+const canMem=m=>isAdmin()||sessionStorage.getItem("pin_"+m.id)==="1"||canMod(m.classId);
+const inClass=cid=>isAdmin()||store("in_"+cid)===true;
+
+/* ============ MODAL / SHEET ============ */
+const sheet=(html)=>{$("#modal").innerHTML=`<div class="sheet" onclick="if(event.target===this)closeSheet()"><div>${html}</div></div>`};
+window.closeSheet=()=>$("#modal").innerHTML="";
+const field=(id,l,ph="",t="text")=>`<label class="block mb-3 text-sm font-bold">${l}<input id="${id}" type="${t}" placeholder="${ph}" class="inp mt-1 font-normal"></label>`;
+const v=id=>$("#"+id).value.trim();
+
+/* ===== #026 – OTP nâng cấp (5 ô, hidden input) ===== */
+function otp(n,id,val=""){
+  const cells=[...Array(n)].map((_,i)=>`<span class="kyotp-c" style="--i:${i}" data-i="${i}">${val[i]?`<span>${val[i]}</span>`:""}</span>`).join("");
+  return`<div class="kyotp-wrap" id="${id}" style="position:relative">
+    ${cells}
+    <input class="kyotp-real" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="${n}" value="${esc(val)}" aria-label="Mã ${n} số">
+  </div>`;
+}
+function otpBind(id){
+  const wrap=$("#"+id);const real=wrap.querySelector(".kyotp-real");const cells=[...wrap.querySelectorAll(".kyotp-c")];
+  let prev="";
+  function paint(){
+    const val=real.value;
+    cells.forEach((c,i)=>{
+      const ch=val[i]||"";
+      if(ch!==(prev[i]||""))c.innerHTML=ch?`<span>${ch}</span>`:"";
+      c.classList.toggle("has",!!ch);
+      c.classList.toggle("cur",document.activeElement===real&&i===Math.min(val.length,cells.length-1));
+    });
+    prev=val;
+  }
+  real.addEventListener("input",()=>{real.value=real.value.replace(/\D/g,"").slice(0,cells.length);paint()});
+  real.addEventListener("focus",paint);real.addEventListener("blur",paint);
+  // Click on cells focuses input
+  cells.forEach(c=>c.addEventListener("click",()=>real.focus()));
+  wrap.dataset.bound="1";
+}
+const otpVal=id=>{const r=$("#"+id)?.querySelector(".kyotp-real");return r?r.value:""};
+
+/* OTP FX */
+window.otpFx=async(id,ok)=>{
+  const wrap=$("#"+id);if(!wrap)return;
+  wrap.classList.remove("is-ok","is-bad");void wrap.offsetWidth;
+  wrap.classList.add(ok?"is-ok":"is-bad");
+  if(ok)await new Promise(r=>setTimeout(r,650));
+  else{await new Promise(r=>setTimeout(r,900));wrap.classList.remove("is-bad");const r=wrap.querySelector(".kyotp-real");if(r){r.value="";wrap.querySelectorAll(".kyotp-c").forEach(c=>{c.innerHTML="";c.classList.remove("has","cur")})}}
+};
+
+/* ===== #480 – PIN pad chấm nâng cấp ===== */
+function pinPad(id,len=6){
+  const dots=[...Array(len)].map((_,i)=>`<i class="kypin-d" style="--i:${i}" data-di="${i}"></i>`).join("");
+  const keys=[1,2,3,4,5,6,7,8,9,"",0,"⌫"].map(k=>{
+    if(k==="")return`<span></span>`;
+    if(k==="⌫")return`<button type="button" class="kypin-k kypin-fn" data-pk="del" aria-label="Xóa"><span><svg viewBox="0 0 24 24"><path d="M9 5.5h10a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H9l-6-6.5Z"/><path d="m11.5 9.5 5 5m0-5-5 5"/></svg></span></button>`;
+    return`<button type="button" class="kypin-k" data-pk="${k}"><span>${k}</span></button>`;
+  }).join("");
+  return`<div class="kypin-wrap" id="kypin-${id}">
+    <div class="kypin-dots" id="kypin-dots-${id}">${dots}<span class="kypin-ok"><svg viewBox="0 0 24 24"><path d="m5.5 12.5 4.5 4.5 8.5-9.5"/></svg></span></div>
+    <p class="kypin-err" id="kypin-err-${id}"></p>
+    <div class="kypin-pad">${keys}</div>
+    <input type="hidden" id="${id}">
+  </div>`;
+}
+// Bind pin pad
+function bindPinPad(id,maxLen=6,onChange){
+  const wrap=document.getElementById("kypin-"+id);if(!wrap)return;
+  const inp=document.getElementById(id);
+  const dotsEl=wrap.querySelector(".kypin-dots");
+  const dots=[...wrap.querySelectorAll(".kypin-d")];
+  const pad=wrap.querySelector(".kypin-pad");
+  let val="",busy=false;
+  function paintDots(){
+    dots.forEach((d,i)=>{
+      const on=i<val.length;
+      if(on&&!d.classList.contains("on")){d.classList.remove("off");d.classList.add("on")}
+      if(!on&&d.classList.contains("on")){d.classList.remove("on");d.classList.add("off")}
+    });
+    inp.value=val;if(onChange)onChange(val);
+  }
+  function pressAnim(btn){btn.classList.add("dn");setTimeout(()=>btn.classList.remove("dn"),130)}
+  function addDigit(d){
+    if(busy||val.length>=maxLen)return;
+    val+=d;paintDots();
+    if(val.length===maxLen){inp.dispatchEvent(new Event("change"))}
+  }
+  function del(){if(busy||!val)return;val=val.slice(0,-1);paintDots()}
+  pad.addEventListener("pointerdown",e=>{const k=e.target.closest(".kypin-k");if(k)pressAnim(k)});
+  pad.addEventListener("click",e=>{
+    const k=e.target.closest(".kypin-k");if(!k)return;
+    if(k.dataset.pk==="del")del();else addDigit(k.dataset.pk);
+  });
+  // Expose methods
+  inp._pinBad=()=>{
+    dotsEl.classList.add("is-bad","is-shake");
+    setTimeout(()=>{dotsEl.classList.remove("is-shake","is-bad");val="";paintDots();busy=false},600);
+  };
+  inp._pinOk=()=>{
+    // compute centers
+    const mid=dotsEl.getBoundingClientRect(),cx=mid.left+mid.width/2;
+    dots.forEach(d=>{const r=d.getBoundingClientRect();d.style.setProperty("--kptx",(cx-(r.left+r.width/2))+"px")});
+    dotsEl.classList.add("is-ok");busy=true;
+    setTimeout(()=>{dotsEl.classList.remove("is-ok");dots.forEach(d=>d.classList.remove("on","off"));val="";paintDots();busy=false},2200);
+  };
+  inp._reset=()=>{val="";dotsEl.classList.remove("is-ok","is-bad","is-shake");dots.forEach(d=>d.classList.remove("on","off"));busy=false;paintDots()};
+  paintDots();
+}
+// Keep old data-pk global handler (for backward compat)
+document.addEventListener("click",e=>{
+  const k=e.target.closest("[data-pk]");if(!k||k.closest(".kypin-pad"))return;
+  const iid=k.dataset.t;if(!iid)return;
+  const inp=$("#"+iid);if(!inp)return;
+  const c=k.dataset.pk;
+  if(c==="⌫")inp.value=inp.value.slice(0,-1);else if(c==="✓")inp.dispatchEvent(new Event("change"));else if(inp.value.length<6)inp.value+=c;
+});
+
+window.copy=async(t,b)=>{await navigator.clipboard?.writeText(t).catch(()=>{});const o=b.innerHTML;b.innerHTML="✔ Đã chép";b.style.background="#22c55e";setTimeout(()=>{b.innerHTML=o;b.style.background=""},1600)};
+
+/* ===== #269 – Confirm Delete nâng cấp ===== */
+function confirmDel(name,fn){
+  sheet(`<h3 class="font-bold text-lg mb-2">Xác nhận xóa</h3>
+  <p class="text-sm mb-2">Gõ đúng tên bên dưới để xóa vĩnh viễn:</p>
+  <div class="kydel-name mb-2">${[...name].map((c,i)=>`<span id="cfn${i}">${esc(c)}</span>`).join("")}</div>
+  <input id="cf" class="kydel-in" autocomplete="off" spellcheck="false" placeholder="Gõ tên...">
+  <button id="cfb" class="btn w-full opacity-40" style="background:var(--coral)" disabled>Xóa</button>`);
+  const cfEl=$("#cf"),spans=[...name].map((_,i)=>$("#cfn"+i));
+  cfEl.oninput=()=>{
+    const val=cfEl.value;let k=0;
+    while(k<val.length&&val[k]===name[k])k++;
+    spans.forEach((s,i)=>s.classList.toggle("is-ok",i<k));
+    if(val.length&&k<val.length){cfEl.classList.remove("is-shake");void cfEl.offsetWidth;cfEl.classList.add("is-shake")}
+    const ok=val===name;$("#cfb").disabled=!ok;$("#cfb").classList.toggle("opacity-40",!ok);
+  };
+  $("#cfb").onclick=async()=>{await fn();closeSheet();toast("Đã xóa")}
+}
+
+/* ============ ĐỊNH TUYẾN ============ */
+let tab=0,miniOn=false;
+window.goBack=()=>history.length>1?history.back():(location.hash="#/");
+const crumbs=a=>`<nav class="text-sm mb-3 flex flex-wrap gap-1 items-center"><button class="btn ghost" style="padding:.2rem .8rem;margin-right:6px" onclick="goBack()">← Quay lại</button>${a.map(([l,h],i)=>(i?"<span>›</span>":"")+(h?`<a class="underline" href="${h}">${esc(l)}</a>`:`<b>${esc(l)}</b>`)).join("")}</nav>`;
+const head=(t,sub="")=>`<h1 class="hand text-4xl md:text-5xl mb-1"><span class="ul">${esc(t)}</span></h1>${sub?`<p class="text-sm mb-4 opacity-80">${esc(sub)}</p>`:""}`;
+async function route(){
+  const h=location.hash.replace(/^#\/?/,"").split("/");window.scrollTo(0,0);const A=$("#app");
+  if(h[0]==="s")A.innerHTML=schoolPage(h[1]);
+  else if(h[0]==="c"){A.innerHTML=classPage(h[1]);bindClass(h[1]);const c=get("classes",h[1]);if(c?.music)setTrack(0,c.music)}
+  else if(h[0]==="m")A.innerHTML=memberPage(h[1]);
+  else if(h[0]==="admin")A.innerHTML=adminPage();
+  else{A.innerHTML=homePage();countUp();initFan()}
+  $$("[data-search]").forEach(searchBind)}
+addEventListener("hashchange",route);
+
+/* ============ TRANG CHỦ ============ */
+function homePage(){
+  // #369 – fan ảnh, dùng ảnh thực từ DB
+  const fanImgs=S.photos.slice(0,6).map((p,i)=>`<img class="kyfan-p" src="${esc(opt(p.url,300))}" style="--fi:${i}" alt="">`).join("");
+  return`<header class="text-center py-4">
+  <div class="fan mb-4" id="kyfan">${fanImgs}</div>
+  ${head("Kỷ niệm học sinh","Nơi lưu giữ thanh xuân của từng trường, từng lớp, từng người.")}
+  <div class="kysrc relative text-left" id="kysrc-home">
+    <div class="kysrc-f">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+      <input class="kysrc-in" type="text" placeholder="Tìm trường hoặc lớp…" id="q" autocomplete="off" spellcheck="false" aria-label="Tìm kiếm">
+    </div>
+    <div class="kysrc-dd" id="sg"><i class="kysrc-pill" aria-hidden="true"></i><div class="kysrc-lb" role="listbox"></div></div>
+  </div>
+  </header>
+  <section class="grid gap-4 sm:grid-cols-2 mt-4">${S.schools.map(s=>`<a href="#/s/${s.id}" class="card block overflow-hidden"><div class="h-28 bg-white overflow-hidden">${s.cover?`<img loading="lazy" src="${esc(opt(s.cover,500))}" class="w-full h-28 object-cover" onload="this.style.filter='none'" style="filter:blur(10px);transition:filter .5s" alt="">`:""}</div><div class="p-3"><b>${esc(s.name)}</b><div class="text-sm opacity-70">${by("classes","schoolId",s.id).length} lớp</div></div></a>`).join("")||`<p>Chưa có trường nào. Admin hãy thêm trường mới.</p>`}</section>
+  <footer class="text-center mt-8 text-sm"><a href="#/admin" class="underline">Quản trị</a></footer>`}
+
+/* #429 – Search bind nâng cấp */
+function searchBind(w){
+  // Legacy support cho data-search wrap
+  const inp=w.querySelector?.("input")||$("#q");
+  if(!inp)return;
+  const srcWrap=document.getElementById("kysrc-home");if(!srcWrap)return;
+  const inpEl=srcWrap.querySelector(".kysrc-in");
+  const dd=srcWrap.querySelector(".kysrc-dd");
+  const lb=srcWrap.querySelector(".kysrc-lb");
+  const pill=srcWrap.querySelector(".kysrc-pill");
+  let list=[],act=-1;
+  function hl(s,t){const i=s.toLowerCase().indexOf(t);return i<0?esc(s):esc(s.slice(0,i))+`<mark>${esc(s.slice(i,i+t.length))}</mark>`+esc(s.slice(i+t.length))}
+  function setOpen(open){srcWrap.classList.toggle("is-open",open);inpEl.setAttribute("aria-expanded",open?"true":"false")}
+  function paint(jump){
+    [...lb.querySelectorAll(".kysrc-o")].forEach((o,i)=>o.setAttribute("aria-selected",i===act?"true":"false"));
+    if(jump){pill.style.transition="none";void pill.offsetWidth}
+    pill.style.setProperty("--py",(Math.max(0,act)*38)+"px");
+    pill.style.setProperty("--po",act>=0?1:0);
+    if(jump){void pill.offsetWidth;pill.style.transition=""}
+  }
+  function render(){
+    const q=inpEl.value.trim().toLowerCase();
+    if(!q){list=[];setOpen(false);return}
+    list=[...S.schools.filter(s=>slug(s.name).includes(slug(q))).map(s=>({label:s.name,sub:"Trường",href:"#/s/"+s.id})),
+          ...S.classes.filter(c=>slug(c.name).includes(slug(q))).map(c=>({label:c.name+" – "+(get("schools",c.schoolId)?.name||""),sub:"Lớp",href:"#/c/"+c.id}))].slice(0,6);
+    lb.innerHTML=list.length?list.map((x,i)=>`<a href="${x.href}" class="kysrc-o" role="option" aria-selected="false" style="--i:${i}" onclick="this.closest('.kysrc')?.classList.remove('is-open')"><span class="kysrc-t">${hl(x.label,q)}</span><span class="kysrc-m">${esc(x.sub)}</span></a>`).join(""):`<div class="kysrc-no">Không thấy kết quả</div>`;
+    setOpen(true);act=list.length?0:-1;paint(true);
+  }
+  inpEl.addEventListener("input",render);
+  inpEl.addEventListener("focus",()=>{if(inpEl.value.trim())render()});
+  document.addEventListener("click",e=>{if(!srcWrap.contains(e.target))setOpen(false)});
+  lb.addEventListener("click",()=>setOpen(false));
+}
+
+/* #369 – Fan init */
+function initFan(){
+  const fan=document.getElementById("kyfan");if(!fan)return;
+  const imgs=[...fan.querySelectorAll(".kyfan-p")];
+  if(!imgs.length)return;
+  let spread=false;
+  function place(){
+    const n=imgs.length;
+    imgs.forEach((img,i)=>{
+      if(spread){
+        const col=i%3,row=Math.floor(i/3);
+        img.style.transform=`translate(${(col-1)*110}px,${(row-0.5)*130}px) rotate(0deg)`;
+        img.style.zIndex=1;
+        img.style.setProperty("--dl",(i*40)+"ms");
+      } else {
+        const k=i-n+1;
+        img.style.transform=`translate(${k*2}px,${k*-2}px) rotate(${(k*8+2)}deg)`;
+        img.style.zIndex=i+1;
+        img.style.setProperty("--dl",((n-1-i)*30)+"ms");
+      }
+    });
+  }
+  fan.addEventListener("click",()=>{spread=!spread;place()});
+  fan.addEventListener("mouseenter",()=>{if(!spread)imgs.forEach((img,i)=>{const k=i-imgs.length+1;img.style.transform=`translate(${k*18}px,${k*-4}px) rotate(${k*8+2}deg)`})});
+  fan.addEventListener("mouseleave",()=>{if(!spread)place()});
+  place();
+}
+
+function countUp(){$$("[data-n]").forEach(e=>{const n=+e.dataset.n;let c=0;const t=setInterval(()=>{c+=Math.ceil(n/30);if(c>=n){c=n;clearInterval(t)}e.textContent=c},30)})}
+
+/* ============ TRANG TRƯỜNG ============ */
+let yearF="";
+function schoolPage(id){const s=get("schools",id);if(!s)return"<p>Không tìm thấy trường.</p>";
+  const years=[...new Set(by("classes","schoolId",id).map(c=>c.year))],cl=by("classes","schoolId",id).filter(c=>!yearF||c.year===yearF);
+  return`${crumbs([["Trang chủ","#/"],[s.name]])}${head(s.name)}
+  <div class="flex gap-2 items-center my-3"><select class="inp" style="width:auto" onchange="yearF=this.value;route()"><option value="">Mọi niên khóa</option>${years.map(y=>`<option ${y===yearF?"selected":""}>${esc(y)}</option>`).join("")}</select>
+  <button class="btn sun ml-auto" onclick="newClass('${id}')">＋ Tạo lớp mới</button></div>
+  <div class="grid gap-3 sm:grid-cols-2">${cl.map(c=>`<a href="#/c/${c.id}" class="card p-3 block"><div class="hand text-3xl">${esc(c.name)}</div><div class="text-sm font-bold">${esc(c.year)}</div><div class="text-sm opacity-70">${esc(c.note)}</div></a>`).join("")||"<p>Chưa có lớp nào.</p>"}</div>
+  ${isAdmin()?`<button class="btn ghost mt-6" onclick="delSchool('${id}')">Xóa trường (Admin)</button>`:""}`}
+window.yearF=yearF;Object.defineProperty(window,"yearF",{get:()=>yearF,set:v2=>yearF=v2});window.route=route;
+window.delSchool=id=>confirmDel(get("schools",id).name,async()=>{await db.del("schools",id);location.hash="#/"});
+window.newClass=sid=>{
+  const lim=cfg().limit;if(!isAdmin()&&myClassCount()>=lim)return toast(`Thiết bị này đã tạo đủ ${lim} lớp.`);
+  sheet(`<h3 class="hand text-3xl mb-2">Tạo lớp mới</h3>${field("n1","Tên lớp","VD: 12A1")}${field("n2","Niên khóa","VD: 2023–2026")}${field("n3","Ghi chú lớp")}${field("n4","Mật khẩu quản lý lớp","Ghi nhớ kỹ","password")}
+  <label class="block mb-3 text-sm font-bold">Ảnh bìa (tùy chọn)<input id="n5" type="file" accept="image/*" class="inp mt-1"></label><button id="nok" class="btn w-full">Tạo lớp</button>`);
+  $("#nok").onclick=async()=>{const n=v("n1"),y=v("n2"),p=v("n4");if(!n||!y||p.length<4)return toast("Nhập tên lớp, niên khóa và mật khẩu ≥ 4 ký tự");
+    if(S.classes.some(c=>c.schoolId===sid&&c.year===y&&slug(c.name)===slug(n)))return toast("Lớp này đã tồn tại");
+    let cover="";const f=$("#n5").files[0];if(f)cover=await upload(f,()=>{});
+    let code;do code=String(Math.floor(Math.random()*1e5)).padStart(5,"0");while(S.classes.some(c=>c.code===code));
+    const c={id:uid(),schoolId:sid,name:n,year:y,note:v("n3"),cover,code,passHash:await sha(p),music:"",devId,fp,ip};await db.set("classes",c);showInvite(c)}};
+function inviteLink(c){const s=get("schools",c.schoolId);return`https://${CONFIG.domain}/?truong=${s?.slug}&lop=${c.id}&code=${c.code}`}
+function showInvite(c){const l=inviteLink(c);sheet(`<h3 class="hand text-3xl">Đã tạo lớp ${esc(c.name)} 🎉</h3><p class="text-sm">Mã lớp của bạn:</p><div class="hand text-6xl text-center my-2 tracking-widest">${c.code}</div>
+  <img class="mx-auto border-4 border-white shadow" width="170" height="170" src="https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=${encodeURIComponent(l)}" alt="QR">
+  <button class="btn w-full mt-3" onclick="copy('${l}',this)">Sao chép link mời</button><a class="btn sun w-full block text-center mt-2" href="#/c/${c.id}" onclick="closeSheet()">Vào lớp</a>`)}
+
+/* ============ TRANG LỚP ============ */
+function classPage(id){const c=get("classes",id);if(!c)return"<p>Không tìm thấy lớp.</p>";const s=get("schools",c.schoolId);
+  return`${crumbs([["Trang chủ","#/"],[s?.name||"","#/s/"+c.schoolId],[c.name]])}${head(`Lớp ${c.name}`,`${c.year} · ${c.note}`)}
+  <div class="flex gap-2 mb-3 flex-wrap">${store("me_"+id)&&get("members",store("me_"+id))?`<button class="btn sun text-sm" onclick="goMe('${id}')">👤 Trang của tôi</button>`:""}<button class="btn ghost text-sm" onclick="enterCode('${id}')">🔑 Nhập mã lớp</button><button class="btn ghost text-sm" onclick="manage('${id}')">⚙ Quản lý lớp</button></div>
+  <div id="kytabs-${id}" class="kytab-wrap mb-4">
+    <div class="kytab-bar">
+      <button class="kytab-btn" data-t="0">Tập thể lớp</button>
+      <button class="kytab-btn" data-t="1">Thành viên</button>
+      <span class="kytab-pill" id="kytab-pill-${id}"></span>
+    </div>
+  </div>
+  <div id="pane" style="touch-action:pan-y"></div>`}
+
+/* #048 – Bind class với swipe + underline động */
+function bindClass(id){const P=$("#pane");if(!P)return;
+  const pill=document.getElementById("kytab-pill-"+id);
+  const btns=$$(`#kytabs-${id} .kytab-btn`);
+  const draw=()=>{
+    // Move pill
+    if(pill&&btns[tab]){
+      pill.style.transform=`translateX(${tab*100}%)`;
+    }
+    btns.forEach(b=>{b.style.color=+b.dataset.t===tab?"#fff":"#667"});
+    P.innerHTML=tab?memberTab(id):groupTab(id);after(id);
+    P.animate([{transform:"translateX("+(tab?40:-40)+"px)",opacity:0},{transform:"none",opacity:1}],{duration:400,easing:"cubic-bezier(.34,1.45,.64,1)"});
+  };
+  btns.forEach(b=>b.onclick=()=>{tab=+b.dataset.t;draw()});
+  let x0=0;
+  P.ontouchstart=e=>x0=e.touches[0].clientX;
+  P.ontouchend=e=>{const d=e.changedTouches[0].clientX-x0;if(Math.abs(d)>70){tab=d<0?1:0;draw()}};
+  window.redraw=draw;draw()}
+
+/* ===== #032/#075 – Drop zone HTML nâng cấp ===== */
+function dropZoneHtml(dropId,fileId,upId,label="Kéo thả hoặc chọn nhiều ảnh"){
+  return`<div id="${dropId}" class="kydrop mb-3" ondragover="event.preventDefault()">
+    <svg class="kydrop-dash" aria-hidden="true"><rect width="100%" height="100%" rx="19"/></svg>
+    <div class="kydrop-orb"><svg viewBox="0 0 28 28"><path d="M8.5 20.5H7a5 5 0 0 1-.6-10 7 7 0 0 1 13.4-1.6A5.5 5.5 0 0 1 21 20.5h-1.5M14 13v10M10.5 16.5L14 13l3.5 3.5"/></svg></div>
+    <b class="text-sm">${label}</b>
+    <input id="${fileId}" type="file" multiple accept="image/*" hidden>
+    <ul class="kyup-list" id="${upId}"></ul>
+  </div>`}
+
+function groupTab(id){const ph=by("photos","classId",id).filter(p=>!p.memberId),vd=by("videos","classId",id),nt=by("notes","classId",id).sort((a,b)=>b.ts-a.ts);
+  return`<h2 class="hand text-3xl mb-2">Ảnh lớp</h2>
+  ${dropZoneHtml("drop","fi","up")}
+  <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">${ph.map(p=>polaroid(p)).join("")||"<p class='col-span-3'>Chưa có ảnh.</p>"}</div>
+  <h2 class="hand text-3xl mb-2">Video lớp</h2>${vd.map(x=>`<div class="mb-3 relative"><div class="vw aspect-video bg-black rounded-xl overflow-hidden"><iframe class="w-full h-full" loading="lazy" src="${embed(x.url)}" allowfullscreen allow="autoplay;encrypted-media"></iframe></div>${canMod(id)?`<button class="text-xs underline" onclick="delItem('videos','${x.id}','video')">xóa</button>`:""}</div>`).join("")}
+  <div class="flex gap-2 mb-6"><input id="vu" class="inp" placeholder="Dán link YouTube / Drive / TikTok"><button class="btn" onclick="addVideo('${id}')">Thêm</button></div>
+  <h2 class="text-center" style="font-family:Pacifico;font-size:2rem">Những Lời Nhắn Nhủ</h2><div style="width:64px;height:4px;border-radius:4px;margin:6px auto 18px;background:linear-gradient(90deg,var(--ink),var(--coral))"></div><div class="card p-3 mb-3">${field("gn","Tên bạn / thầy cô")}<textarea id="gt" class="inp mb-2" rows="3" placeholder="Viết lời nhắn…"></textarea><button id="gs" class="btn sun plane" onclick="addNote('${id}',this)">✈ Gửi lưu bút</button></div>
+  <div class="grid grid-cols-2 sm:grid-cols-3 gap-5 mt-4">${nt.map(n=>stk(n,canMod(id))).join("")||"<p class='col-span-3 text-center'>Hãy là người viết lời nhắn đầu tiên.</p>"}</div>`}
+
+window.goMe=cid=>{tab=1;window.redraw();const el=$(`[data-mid="${store("me_"+cid)}"]`);if(el){el.scrollIntoView({behavior:"smooth",block:"center"});el.animate([{transform:"scale(1.1)",background:"#ffd23f"},{transform:"scale(1)"}],{duration:700})}};
+
+/* ===== #022 – Burst like nâng cấp ===== */
+window.burst=b=>{
+  if(!b)return;
+  b.style.position="relative";
+  const wrap=b.closest(".ky22-wrap")||b;
+  // Ring
+  const ring=document.createElement("span");ring.className="ky22-ring";ring.style.cssText="position:absolute;left:50%;top:50%;width:48px;height:48px;margin:-24px;border-radius:50%;border:10px solid #FF7A93;transform:scale(0);opacity:0;pointer-events:none";
+  b.appendChild(ring);
+  ring.animate([{transform:"scale(.3)",opacity:1,borderWidth:"14px"},{transform:"scale(1.6)",opacity:0,borderWidth:"0px"}],{duration:600,easing:"cubic-bezier(.2,.8,.2,1)"}).onfinish=()=>ring.remove();
+  // Dots
+  const C=["#FF4D6D","#8B6CFF","#FFB547","#22C3A6","#3D8BFF","#FF7A93","#FFB26B"];
+  C.forEach((c,i)=>{
+    const d=document.createElement("i"),a=i/C.length*Math.PI*2;
+    d.style.cssText=`position:absolute;left:50%;top:50%;width:8px;height:8px;border-radius:50%;background:${c};pointer-events:none;margin:-4px`;
+    b.appendChild(d);
+    d.animate([{transform:"translate(0,0) scale(1)",opacity:1},{transform:`translate(${Math.cos(a)*40}px,${Math.sin(a)*40}px) scale(.2)`,opacity:0}],{duration:700,delay:120,easing:"cubic-bezier(.2,.8,.2,1)",fill:"backwards"}).onfinish=()=>d.remove();
+  });
+  // Heart bounce
+  b.animate([{transform:"scale(1)"},{transform:"scale(.72)",offset:.18},{transform:"scale(1.24)",offset:.48},{transform:"scale(1)"}],{duration:700});
+};
+
+const SC=["#f3f9b5","#f8b4b9","#aef0d1","#cdb4f6","#e4f7b7"];
+const stk=(n,mod)=>{const h=[...n.id].reduce((a,c)=>a+c.charCodeAt(0),0);return`<div class="stk" style="--c:${SC[h%5]};--r:${(h%7)-3}deg"><p>${esc(n.text)}</p><span>– ${esc(n.author)}</span>${mod?`<button onclick="delItem('notes','${n.id}','lưu bút')">xóa</button>`:""}</div>`};
+
+const polaroid=(p,own)=>`<figure class="pol" style="position:relative">
+  <div class="cursor-zoom-in" data-lb="${p.id}">
+    <img loading="lazy" class="w-full aspect-[4/5] object-cover" src="${esc(opt(p.url,400))}" onload="this.style.filter='none'" style="filter:blur(12px);transition:filter .6s" alt="">
+  </div>
+  <div class="ky22-wrap absolute bottom-1 left-2">
+    <button class="text-sm font-bold" data-heart="${p.id}" style="background:none;border:0;cursor:pointer">❤ <span>${p.hearts||0}</span></button>
+  </div>
+  ${own?`<button class="absolute bottom-1 right-2 text-xs underline" onclick="delItem('photos','${p.id}','ảnh')">xóa</button>`:""}
+</figure>`;
+
+window.delItem=(c,id,l)=>confirmDel(l,async()=>{await db.del(c,id);redraw?.();route()});
+
+function memberTab(id){const ms=by("members","classId",id);
+  return`<button class="btn sun w-full mb-3" onclick="newMember('${id}')">＋ Tạo trang cá nhân của bạn</button>
+  <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">${ms.map(m=>`<a href="#/m/${m.id}" data-mid="${m.id}" class="card p-3 text-center block"><div class="w-20 h-20 rounded-full overflow-hidden mx-auto bg-white border-2 border-[var(--ink)]">${m.avatar?`<img loading="lazy" src="${esc(opt(m.avatar,160))}" class="w-full h-full object-cover" alt="${esc(m.name)}">`:""}</div><b class="block mt-2">${esc(m.name)}</b><span class="text-xs opacity-70">${esc(m.quote)}</span></a>`).join("")||"<p>Chưa có thành viên.</p>"}</div>`}
+
+function after(id){
+  const fi=$("#fi"),dr=$("#drop");
+  if(dr){
+    dr.onclick=e=>{if(!e.target.closest("#up"))fi?.click()};
+    dr.ondrop=e=>{e.preventDefault();ups([...e.dataTransfer.files],id,null);dr.classList.remove("is-over")};
+    dr.ondragenter=e=>{e.preventDefault();dr.classList.add("is-over")};
+    dr.ondragleave=()=>dr.classList.remove("is-over");
+    fi.onchange=()=>ups([...fi.files],id,null);
+  }
+  bindGallery();bindMini()}
+
+async function ups(files,cid,mid){
+  if(!files.length)return;
+  if(!mid&&!inClass(cid))return enterCode(cid);
+  const box=$("#up");if(!box)return;
+  box.innerHTML="";
+  await Promise.all(files.map(async(f,i)=>{
+    // Add row
+    const li=document.createElement("li");li.className="kyup-row";
+    li.innerHTML=`<span class="kyup-name">${esc(f.name)}</span><span class="kyup-pct" id="kyup-pct-${i}">0%</span><span class="kyup-bar" id="kyup-bar-${i}" style="transform:scaleX(0)"></span>`;
+    box.appendChild(li);
+    try{
+      const u=await upload(f,p=>{
+        const bar=document.getElementById("kyup-bar-"+i);const pct=document.getElementById("kyup-pct-"+i);
+        if(bar)bar.style.transform=`scaleX(${p/100})`;if(pct)pct.textContent=Math.round(p)+"%";
+      });
+      li.classList.add("done");const pct=document.getElementById("kyup-pct-"+i);if(pct)pct.textContent="✔";
+      await db.set("photos",{id:uid(),classId:cid,memberId:mid,url:u,hearts:0});
+    }catch{toast("Lỗi tải ảnh")}
+  }));
+  toast("Đã tải ảnh");mid?route():redraw()}
+
+window.addVideo=async cid=>{if(!inClass(cid))return enterCode(cid);const u=v("vu");if(!embed(u))return toast("Link video không hợp lệ");await db.set("videos",{id:uid(),classId:cid,url:u});redraw()};
+window.addNote=async(cid,b)=>{if(!inClass(cid))return enterCode(cid);const a=v("gn"),t=v("gt");if(!a||!t)return toast("Nhập tên và lời nhắn");b.classList.add("fly");await new Promise(r=>setTimeout(r,700));await db.set("notes",{id:uid(),classId:cid,author:a,text:t,ts:Date.now()});redraw()};
+
+/* ===== #061 – Lightbox toàn màn hình ===== */
+function bindGallery(){
+  $$("[data-heart]").forEach(b=>b.onclick=async e=>{
+    const p=get("photos",b.dataset.heart);p.hearts=(p.hearts||0)+1;
+    b.querySelector("span").textContent=p.hearts;
+    burst(b);await db.set("photos",p);
+  });
+  $$("[data-lb]").forEach(el=>el.onclick=()=>{
+    const list=$$("[data-lb]").map(x=>get("photos",x.dataset.lb));
+    let i=list.findIndex(p=>p.id===el.dataset.lb);
+    openLightbox(list,i);
+  });
+}
+
+function openLightbox(list,idx){
+  let i=idx,z=1,tx=0,ty=0,sx=0,sy=0,mode="";
+  function show(){
+    const p=list[i];if(!p)return;
+    const ov=document.getElementById("kylb-overlay");
+    const imgEl=ov.querySelector("img");
+    if(imgEl){imgEl.src=esc(opt(p.url,1600));imgEl.style.transform=`translate(${tx}px,${ty}px) scale(${z})`}
+  }
+  if(document.getElementById("kylb-overlay")){document.getElementById("kylb-overlay").remove()}
+  const ov=document.createElement("div");ov.id="kylb-overlay";
+  ov.innerHTML=`<img src="${esc(opt(list[i].url,1600))}" alt="" style="max-width:92vw;max-height:92vh;border-radius:8px;user-select:none"><div class="kylb-zoom-label">2× zoom</div><button id="kylb-prev" aria-label="Trước">‹</button><button id="kylb-next" aria-label="Sau">›</button><button id="kylb-close" aria-label="Đóng">✕</button>`;
+  document.body.appendChild(ov);
+  const imgEl=ov.querySelector("img");
+  function go(d){i=(i+d+list.length)%list.length;z=1;tx=0;ty=0;imgEl.src=esc(opt(list[i].url,1600));imgEl.style.transform=""}
+  document.getElementById("kylb-prev").onclick=e=>{e.stopPropagation();go(-1)};
+  document.getElementById("kylb-next").onclick=e=>{e.stopPropagation();go(1)};
+  document.getElementById("kylb-close").onclick=()=>ov.remove();
+  ov.onclick=e=>{if(e.target===ov)ov.remove()};
+  // Swipe to close / next / prev
+  ov.addEventListener("pointerdown",e=>{if(e.target.closest("button"))return;sx=e.clientX;sy=e.clientY;mode="wait";ov.setPointerCapture(e.pointerId)});
+  ov.addEventListener("pointermove",e=>{if(!mode)return;const dx=e.clientX-sx,dy=e.clientY-sy;if(mode==="wait"&&Math.hypot(dx,dy)>8)mode=Math.abs(dy)>Math.abs(dx)?"down":"side";if(mode==="down"){const d=Math.max(0,dy);ov.style.opacity=Math.max(0.2,1-d/300).toFixed(2);imgEl.style.transform=`translateY(${d}px) scale(${1-d/1600})`}});
+  ov.addEventListener("pointerup",e=>{if(!mode)return;const dx=e.clientX-sx,dy=e.clientY-sy,m=mode;mode="";imgEl.style.transform="";ov.style.opacity="";if(m==="down"&&dy>100)ov.remove();else if(m==="side"&&Math.abs(dx)>60)go(dx<0?1:-1)});
+  // Wheel zoom
+  ov.addEventListener("wheel",e=>{e.preventDefault();z=Math.max(1,Math.min(3,z*(e.deltaY<0?1.12:0.89)));imgEl.style.transform=`scale(${z})`;ov.classList.toggle("zoomed",z>1)},{passive:false});
+  // Double tap zoom
+  let lastTap=0;
+  imgEl.addEventListener("dblclick",()=>{z=z>1?1:2;imgEl.style.transform=z>1?`scale(${z})`:"";ov.classList.toggle("zoomed",z>1)});
+  // Keys
+  document.addEventListener("keydown",function kb(e){if(!document.getElementById("kylb-overlay")){document.removeEventListener("keydown",kb);return}if(e.key==="Escape")ov.remove();else if(e.key==="ArrowRight")go(1);else if(e.key==="ArrowLeft")go(-1)});
+}
+
+function bindMini(){$$(".vw").forEach(w=>{const ph=w.parentElement;new IntersectionObserver(([e])=>{w.classList.toggle("mini",!e.isIntersecting&&e.boundingClientRect.top<0);ph.style.minHeight=w.classList.contains("mini")?ph.offsetHeight+"px":""},{threshold:.1}).observe(ph)})}
+
+/* ============ MÃ LỚP ============ */
+window.enterCode=cid=>{const c=get("classes",cid);
+  sheet(`<h3 class="hand text-3xl">Nhập mã lớp 5 số</h3>${otp(5,"oc")}
+  <button id="ok" class="btn w-full">Xác nhận</button>`);
+  otpBind("oc");
+  const r=$("#oc")?.querySelector(".kyotp-real");if(r)r.focus();
+  $("#ok").onclick=async()=>{const good=otpVal("oc")===c.code;await otpFx("oc",good);if(good){store("in_"+cid,true);closeSheet();toast("Đã xác thực lớp ✔");redraw?.()}else toast("Mã lớp không đúng")}};
+
+window.manage=cid=>{const c=get("classes",cid);
+  if(!canMod(cid))return sheet(`<h3 class="hand text-3xl mb-2">Quản lý lớp</h3>${field("mp","Mật khẩu quản lý lớp","","password")}<button id="ok" class="btn w-full">Đăng nhập</button>`),
+    $("#ok").onclick=async()=>{if(c.pass===v("mp")||c.passHash===await sha(v("mp"))){sessionStorage.setItem("mod_"+cid,"1");manage(cid)}else toast("Sai mật khẩu")};
+  const l=inviteLink(c);
+  sheet(`<h3 class="hand text-3xl">Quản lý lớp ${esc(c.name)}</h3><p class="text-sm">Mã lớp:</p><div class="hand text-5xl tracking-widest">${c.code}</div>
+  <div class="flex gap-2 my-3 flex-wrap"><button class="btn" onclick="copy('${l}',this)">Sao chép link mời</button><button class="btn ghost" onclick="regen('${cid}')">Tạo lại mã lớp</button></div>
+  <img width="140" height="140" src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(l)}" alt="QR" class="mb-3">
+  ${field("ee1","Tên lớp","")}${field("ee2","Ghi chú lớp","")}${field("ee3","Link nhạc MP3 riêng","https://…/bai-hat.mp3")}
+  <button id="sv" class="btn sun w-full mb-2">Lưu thay đổi</button>${isAdmin()||true?`<button class="btn w-full" style="background:var(--coral)" id="dc">Xóa lớp</button>`:""}`);
+  $("#ee1").value=c.name;$("#ee2").value=c.note;$("#ee3").value=c.music||"";
+  $("#sv").onclick=async()=>{Object.assign(c,{name:v("ee1")||c.name,note:v("ee2"),music:v("ee3")});await db.set("classes",c);closeSheet();toast("Đã lưu");route()};
+  $("#dc").onclick=()=>confirmDel(c.name,async()=>{for(const k of["members","photos","videos","notes"])for(const x of by(k,"classId",cid))await db.del(k,x.id);await db.del("classes",cid);location.hash="#/s/"+c.schoolId})};
+window.regen=async cid=>{const c=get("classes",cid);let n;do n=String(Math.floor(Math.random()*1e5)).padStart(5,"0");while(S.classes.some(x=>x.code===n));c.code=n;await db.set("classes",c);toast("Đã đổi mã lớp");manage(cid)};
+
+/* ============ THÀNH VIÊN ============ */
+window.newMember=(cid,prefill="")=>{
+  sheet(`<h3 class="hand text-3xl mb-2">Trang cá nhân của bạn</h3>
+  ${field("mn","Họ và tên *")}
+  <label class="block mb-3 text-sm font-bold">Ghi chú / trích dẫn kỷ yếu<textarea id="mq" class="inp mt-1 font-normal" rows="4" placeholder="Quote: 'Hãy sống hết mình...'\nZalo: 0912...\nFacebook: fb.com/...\nSở thích: ..."></textarea></label>
+  <label class="block mb-3 text-sm font-bold">Ảnh đại diện<input id="ma" type="file" accept="image/*" class="inp mt-1"></label>
+  <p class="text-sm font-bold">Mã lớp 5 số</p>${otp(5,"mc",prefill)}
+  <p class="text-sm font-bold mt-3">Mã PIN cá nhân (4–6 số)</p>
+  ${pinPad("mpin",6)}
+  <button id="ok" class="btn sun w-full mt-3">Tạo trang</button>`);
+  otpBind("mc");
+  setTimeout(()=>bindPinPad("mpin",6),50);
+  const sp=()=>document.getElementById("mpin");
+  $("#ok").onclick=async()=>{
+    const c=get("classes",cid),pin=sp()?.value||"";
+    if(!v("mn"))return toast("Nhập họ tên");
+    if(otpVal("mc")!==c.code){otpFx("mc",false);return toast("Mã lớp không đúng")}
+    if(pin.length<4)return toast("PIN cần 4–6 số");
+    let av="";const f=$("#ma").files[0];
+    if(f){
+      // #069 crop flow – open crop sheet
+      av=await new Promise(async res=>{
+        const cropped=await cropSquare(f);res(await upload(cropped,()=>{}));
+      });
+    }
+    const mq=document.getElementById("mq")?.value||"";
+    const m={id:uid(),classId:cid,name:v("mn"),quote:mq,pinHash:await sha(pin),avatar:av};
+    await db.set("members",m);store("in_"+cid,true);store("me_"+cid,m.id);sessionStorage.setItem("pin_"+m.id,"1");closeSheet();location.hash="#/m/"+m.id}};
+
+function memberPage(id){const m=get("members",id);if(!m)return"<p>Không tìm thấy.</p>";const c=get("classes",m.classId),own=canMem(m),ph=by("photos","memberId",id);
+  return`${crumbs([["Trang chủ","#/"],[c.name,"#/c/"+c.id],[m.name]])}<div class="text-center"><div class="w-28 h-28 rounded-full overflow-hidden mx-auto bg-white border-4 border-white shadow">${m.avatar?`<img loading="lazy" src="${esc(opt(m.avatar,240))}" class="w-full h-full object-cover" alt="${esc(m.name)}">`:""}</div>${head(m.name,m.quote)}</div>
+  ${own?`<div>${dropZoneHtml("drop","fi","up","＋ Tải ảnh lên album")}</div><button class="btn ghost text-sm mb-3" onclick="editMember('${id}')">✎ Chỉnh sửa hồ sơ</button>`:`<button class="btn ghost text-sm mb-3" onclick="pinLogin('${id}')">🔒 Đây là trang của tôi</button>`}
+  <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">${ph.map(p=>polaroid(p,own)).join("")||"<p class='col-span-3 text-center'>Chưa có ảnh trong album.</p>"}</div>
+  ${isAdmin()?`<button class="btn ghost mt-6" onclick="delItem('members','${id}','${esc(m.name)}')">Xóa trang (Admin)</button>`:""}`}
+
+document.addEventListener("DOMContentLoaded",()=>{});
+new MutationObserver(()=>{
+  const m=location.hash.match(/#\/m\/(\w+)/);if(!m)return;
+  const fi=$("#fi"),dr=$("#drop");
+  if(fi&&dr&&!dr.dataset.b){dr.dataset.b=1;const mm=get("members",m[1]);
+    dr.onclick=e=>{if(!e.target.closest("#up"))fi.click()};
+    dr.ondrop=e=>{e.preventDefault();ups([...e.dataTransfer.files],mm.classId,mm.id);dr.classList.remove("is-over")};
+    dr.ondragenter=e=>{e.preventDefault();dr.classList.add("is-over")};
+    dr.ondragleave=()=>dr.classList.remove("is-over");
+    fi.onchange=()=>ups([...fi.files],mm.classId,mm.id)}
+  if($("[data-lb]")&&!$("[data-lb]").dataset.b){$$("[data-lb]").forEach(x=>x.dataset.b=1);bindGallery()}
+}).observe($("#app"),{childList:true});
+
+window.pinLogin=id=>{
+  const m=get("members",id);
+  sheet(`<h3 class="hand text-3xl mb-2">Nhập mã PIN cá nhân</h3>${pinPad("lpin",6)}`);
+  setTimeout(()=>{
+    bindPinPad("lpin",6);
+    const lpin=document.getElementById("lpin");
+    lpin.addEventListener("change",async()=>{
+      if(await sha(lpin.value)===m.pinHash){
+        lpin._pinOk?.();
+        await new Promise(r=>setTimeout(r,900));
+        sessionStorage.setItem("pin_"+id,"1");store("me_"+m.classId,id);closeSheet();route();
+      } else {lpin._pinBad?.();toast("PIN không đúng")}
+    });
+  },50)};
+
+window.editMember=id=>{const m=get("members",id);
+  sheet(`<h3 class="hand text-3xl mb-2">Sửa trang cá nhân</h3>${field("e1","Họ và tên")}
+  <label class="block mb-3 text-sm font-bold">Ghi chú / trích dẫn<textarea id="e2" class="inp mt-1 font-normal" rows="4" placeholder="Quote: ...\nZalo: ...\nFacebook: ...\nSở thích: ..."></textarea></label>
+  <label class="block mb-3 text-sm font-bold">Đổi ảnh đại diện<input id="e3" type="file" accept="image/*" class="inp mt-1"></label><button id="ok" class="btn w-full">Lưu</button>`);
+  $("#e1").value=m.name;document.getElementById("e2").value=m.quote||"";
+  $("#ok").onclick=async()=>{const f=$("#e3").files[0];if(f)m.avatar=await upload(await cropSquare(f),()=>{});m.name=v("e1")||m.name;m.quote=document.getElementById("e2")?.value||m.quote;await db.set("members",m);closeSheet();route()}};
+
+/* ============ ADMIN ============ */
+function adminPage(){
+  if(!isAdmin())return`${crumbs([["Trang chủ","#/"],["Admin"]])}${head("Quản trị")}<div class="card p-4">${field("ap","Mật khẩu Admin","","password")}<button class="btn w-full" onclick="adLogin()">Đăng nhập</button></div>`;
+  const used=Math.min(100,Math.round(S.photos.length*1.2));
+  // #472 – Storage bar
+  const storageBar=`
+  <p class="text-sm font-bold mb-1">Dung lượng ước tính (${used}% / 25GB gói Cloudinary Free)</p>
+  <div class="kyst-bar" id="kyst">
+    <span class="kyst-seg" data-k="photos" style="--w:${Math.round(used*0.5)}%;background:#ff5d73" title="Ảnh"></span>
+    <span class="kyst-seg" data-k="videos" style="--w:${Math.round(used*0.3)}%;background:#ffd23f" title="Video"></span>
+    <span class="kyst-seg" data-k="other" style="--w:${Math.round(used*0.2)}%;background:#1d2a4a" title="Khác"></span>
+    <span class="kyst-seg" style="background:rgba(29,42,74,.08)" title="Trống"></span>
+  </div>
+  <div class="kyst-legend">
+    <span class="kyst-item"><i style="background:#ff5d73"></i>Ảnh ${Math.round(used*0.5)}%</span>
+    <span class="kyst-item"><i style="background:#ffd23f"></i>Video ${Math.round(used*0.3)}%</span>
+    <span class="kyst-item"><i style="background:#1d2a4a"></i>Khác ${Math.round(used*0.2)}%</span>
+    <span class="kyst-item"><i style="background:rgba(29,42,74,.18);border:1px solid rgba(29,42,74,.2)"></i>Trống ${100-used}%</span>
+  </div>`;
+  return`${crumbs([["Trang chủ","#/"],["Admin"]])}${head("Bảng điều khiển")}
+  <div class="grid grid-cols-2 gap-3 mb-4">${[["Trường",S.schools.length],["Lớp",S.classes.length],["Thành viên",S.members.length],["Ảnh",S.photos.length]].map(([l,n])=>`<div class="card p-3 text-center"><div class="hand text-5xl" data-n="${n}">0</div>${l}</div>`).join("")}</div>
+  <div class="card p-3 mb-4">${storageBar}</div>
+  <div class="card p-3 mb-4"><b>Giới hạn lớp / thiết bị</b><div class="flex gap-2 mt-2"><input id="lim" type="number" min="1" class="inp" value="${cfg().limit}"><button class="btn" onclick="setLim()">Lưu</button></div><button class="btn ghost text-sm mt-2" onclick="resetDev()">Mở khóa thiết bị này</button></div>
+  <div class="card p-3 mb-4"><b>Trường học</b>${S.schools.map(s=>`<div class="flex justify-between py-1"><span>${esc(s.name)}</span><span><button class="underline text-sm" onclick="editSchool('${s.id}')">sửa</button> <button class="underline text-sm" onclick="delSchool('${s.id}')">xóa</button></span></div>`).join("")}<button class="btn sun mt-2" onclick="editSchool()">＋ Thêm trường</button></div>
+  <div class="card p-3 mb-4"><b>Lớp</b>${S.classes.map(c=>`<div class="flex justify-between py-1"><a href="#/c/${c.id}" class="underline">${esc(c.name)} · ${esc(c.year)} · mã ${c.code}</a><button class="underline text-sm" onclick="confirmDel('${esc(c.name)}',async()=>{await db.del('classes','${c.id}');route()})">xóa</button></div>`).join("")}</div>
+  <button class="btn ghost" onclick="sessionStorage.removeItem('ky_admin');route()">Đăng xuất</button>`}
+
+// Animate storage bar on render
+function initStorageBar(){
+  const segs=$$(".kyst-seg");if(!segs.length)return;
+  setTimeout(()=>segs.forEach(s=>{if(s.style.getPropertyValue("--w"))s.classList.add("loaded")}),100);
+  countUp();
+}
+window.confirmDel=confirmDel;window.db=db;
+window.adLogin=()=>{if(v("ap")===CONFIG.adminPass){sessionStorage.setItem("ky_admin","1");route()}else toast("Sai mật khẩu")};
+window.setLim=async()=>{const c=cfg();c.limit=Math.max(1,+v("lim")||1);await db.set("settings",c);toast("Đã lưu")};
+window.resetDev=async()=>{const c=cfg();c.resets=[...(c.resets||[]),fp];await db.set("settings",c);toast("Đã mở khóa")};
+window.editSchool=id=>{const s=id?get("schools",id):{id:uid(),name:"",cover:""};sheet(`<h3 class="hand text-3xl mb-2">${id?"Sửa":"Thêm"} trường</h3>${field("sn","Tên trường")}<label class="block mb-3 text-sm font-bold">Logo / ảnh bìa<input id="sc" type="file" accept="image/*" class="inp mt-1"></label><button id="ok" class="btn w-full">Lưu</button>`);$("#sn").value=s.name;
+  $("#ok").onclick=async()=>{if(!v("sn"))return;s.name=v("sn");s.slug=slug(s.name);const f=$("#sc").files[0];if(f)s.cover=await upload(f,()=>{});await db.set("schools",s);closeSheet();route()}};
+
+/* Hook vào route để init storage bar và fan */
+const _origRoute=route;
+window.route=async function(){
+  await _origRoute();
+  if(location.hash===""||location.hash==="#/"||location.hash==="#"){initFan()}
+  if(location.hash.includes("admin"))initStorageBar();
+};
+
+/* ============ KHỞI ĐỘNG ============ */
+await db.load();
+const q=new URLSearchParams(location.search);
+if(q.get("lop")&&get("classes",q.get("lop"))){
+  const cid=q.get("lop"),code=q.get("code")||"";
+  history.replaceState(null,"",location.pathname+"#/c/"+cid);tab=1;await route();
+  if(get("classes",cid).code===code)store("in_"+cid,true);
+  setTimeout(()=>newMember(cid,code),400);
+} else route();
+</script></body></html>
