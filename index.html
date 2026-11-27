@@ -41,8 +41,13 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--sky);color:var(--i
 .btn.sun{background:var(--sun);color:var(--ink)} .btn.ghost{background:#fff;color:var(--ink);border:2px solid var(--ink)}
 .inp{width:100%;border:2px solid var(--ink);border-radius:12px;padding:.6rem .8rem;background:#fff}
 .card{background:var(--paper);border-radius:14px;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}
-.pol{background:#fff;padding:8px 8px 28px;box-shadow:0 4px 14px #1d2a4a33;position:relative;transition:transform .2s}
+.pol{background:#fff;padding:8px 8px 44px;box-shadow:0 4px 14px #1d2a4a33;position:relative;transition:transform .2s}
 .pol:nth-child(odd){transform:rotate(-1.5deg)}.pol:nth-child(even){transform:rotate(1.2deg)}
+.pol .ky22-wrap{position:absolute;left:10px;bottom:7px}
+.ky-heart{display:inline-flex;align-items:center;gap:6px;font-size:17px;line-height:1;font-weight:700;color:var(--ink);background:none;border:0;padding:2px 4px;cursor:pointer;touch-action:manipulation;transition:color .2s,transform .15s}
+.ky-heart svg{width:24px;height:24px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:fill .2s,stroke .2s,transform .25s cubic-bezier(.34,1.56,.64,1)}
+.ky-heart.is-liked{color:#ff3b5c}
+.ky-heart.is-liked svg{fill:#ff3b5c;stroke:#ff3b5c}
 
 /* ===== #258 – Skeleton / Blur-up nâng cấp ===== */
 .blur-up{position:relative;overflow:hidden}
@@ -224,7 +229,8 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--sky);color:var(--i
 .kyup-row.fail{border-color:var(--coral);background:#fff5f6}
 .kyup-row.fail .kyup-pct{color:var(--coral);font-weight:700}
 .kyup-err{display:block;font-size:11px;color:var(--coral);font-weight:600;margin-top:2px;text-align:left}
-.kydrop.is-uploading{pointer-events:none;opacity:.75}
+.kydrop.is-uploading,#drop.is-uploading{pointer-events:none;opacity:.75}
+#drop.btn.is-over{outline:2px dashed var(--coral);outline-offset:2px;transform:scale(1.03)}
 
 /* ===== #472 – Admin storage bar ===== */
 .kyst-bar{position:relative;display:flex;gap:2px;height:24px;border-radius:6px;overflow:hidden;margin:8px 0 4px}
@@ -500,6 +506,21 @@ const isClassOwnerMember=c=>!!(c&&c.ownerMemberId&&store("me_"+c.id)===c.ownerMe
 const isClassPassAuthed=cid=>sStore("mod_"+cid)==="1";
 const canMod=cid=>{const c=get("classes",cid);return isAdmin()||isClassOwnerMember(c)||isClassPassAuthed(cid)||isClassCreator(c)};
 const canMem=m=>isAdmin()||sessionStorage.getItem("pin_"+m.id)==="1"||canMod(m.classId);
+const canViewLikers=m=>!!m&&(isAdmin()||sessionStorage.getItem("pin_"+m.id)==="1");
+const getActorMemberId=cid=>{
+  const id1=cid?store("me_"+cid):null;
+  if(id1&&get("members",id1))return id1;
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k=localStorage.key(i);
+      if(k&&k.startsWith("me_")){
+        const mid=store(k);
+        if(mid&&get("members",mid))return mid;
+      }
+    }
+  }catch{}
+  return null;
+};
 const inClass=cid=>{
   if(isAdmin())return true;
   const saved=store("in_"+cid);
@@ -510,8 +531,34 @@ const inClass=cid=>{
   return true;
 };
 
+async function purgeClass(cid){
+  for(const k of["members","photos","videos","notes"]){
+    for(const x of by(k,"classId",cid))await db.del(k,x.id);
+  }
+  await db.del("classes",cid);
+  clearClassAuth(cid);
+  try{localStorage.removeItem("me_"+cid)}catch{}
+  try{sessionStorage.removeItem("mod_"+cid)}catch{}
+}
+function calcDeleteVote(c){
+  const ms=by("members","classId",c?.id);
+  const validIds=new Set(ms.map(m=>m.id));
+  const votes=c?.deleteReq?.votes||{};
+  let yes=0,no=0;
+  for(const [mid,choice] of Object.entries(votes)){
+    if(!validIds.has(mid))continue;
+    if(choice==="yes")yes++;
+    else if(choice==="no")no++;
+  }
+  const total=ms.length;
+  const yesPct=total?Math.round((yes/total)*100):0;
+  const passed=total>0&&(yes/total)>=0.6;
+  const failed=total>0&&((total-no)/total)<0.6;
+  return{total,yes,no,yesPct,passed,failed};
+}
+
 /* ============ MODAL / SHEET ============ */
-const sheet=(html)=>{$("#modal").innerHTML=`<div class="sheet" onclick="if(event.target===this)closeSheet()"><div>${html}</div></div>`};
+const sheet=(html,locked=false)=>{$("#modal").innerHTML=`<div class="sheet" ${locked?'data-locked="1"':'onclick="if(event.target===this)closeSheet()"'}><div>${html}</div></div>`};
 window.closeSheet=()=>$("#modal").innerHTML="";
 const field=(id,l,ph="",t="text")=>`<label class="block mb-3 text-sm font-bold">${l}<input id="${id}" type="${t}" placeholder="${ph}" class="inp mt-1 font-normal"></label>`;
 const v=id=>$("#"+id).value.trim();
@@ -803,9 +850,12 @@ function showInvite(c){const l=inviteLink(c);sheet(`<h3 class="hand text-3xl">Đ
 
 /* ============ TRANG LỚP ============ */
 function classPage(id){const c=get("classes",id);if(!c)return"<p>Không tìm thấy lớp.</p>";const s=get("schools",c.schoolId),mod=canMod(id);
+  const delPending=c.deleteReq?.status==="pending",st=delPending?calcDeleteVote(c):null,myMid=store("me_"+id),myMem=myMid?get("members",myMid):null,myVoted=!!(delPending&&myMem&&c.deleteReq.votes?.[myMid]);
+  const delBanner=delPending?`<div class="card p-3 mb-3 flex items-center justify-between gap-2 flex-wrap" style="box-shadow:none;border-color:var(--coral);background:#fff5f6"><div class="text-xs sm:text-sm"><b style="color:var(--coral)">⚠️ Đang có yêu cầu xóa lớp</b> <span class="opacity-80">Đồng ý: <b>${st.yes}/${st.total} (${st.yesPct}%)</b> · cần 60%</span></div>${myMem?(myVoted?`<span class="text-xs font-bold px-2.5 py-1 rounded-full" style="background:#d1fae5;color:#065f46">✔ Bạn đã bỏ phiếu</span>`:`<button type="button" class="btn text-xs" style="background:var(--coral)" onclick="openDeleteVoteModal('${id}','${myMid}')">Biểu quyết ngay</button>`):""}</div>`:"";
   return`${crumbs([["Trang chủ","#/"],[s?.name||"","#/s/"+c.schoolId],[c.name]])}
   ${c.cover?`<div class="mb-3 rounded-2xl overflow-hidden border-2 border-[var(--ink)] bg-white h-36 sm:h-44 shadow"><img loading="lazy" src="${esc(opt(c.cover,900))}" class="w-full h-full object-cover" onload="this.style.filter='none'" onerror="this.style.filter='none'" style="filter:blur(10px);transition:filter .5s" alt="Ảnh bìa lớp ${esc(c.name)}"></div>`:""}
   ${head(`Lớp ${c.name}`,`${c.year}${c.note?" · "+c.note:""}`)}
+  ${delBanner}
   <div class="flex gap-2 mb-3 flex-wrap items-center">${store("me_"+id)&&get("members",store("me_"+id))?`<button class="btn sun text-sm" onclick="goMe('${id}')">👤 Trang của tôi</button>`:""}<button class="btn ghost text-sm" onclick="enterCode('${id}')">🔑 Nhập mã lớp</button>${mod?`<button class="btn ghost text-sm" onclick="manage('${id}')">⚙ Quản lý lớp</button>`:""}<span id="class-auth-badge" class="text-xs font-bold px-2.5 py-1 rounded-full ${inClass(id)?"":"hidden"}" style="background:#d1fae5;color:#065f46">✔ Đã nhớ mã lớp (12h)</span></div>
   <div id="kytabs-${id}" class="kytab-wrap mb-4">
     <div class="kytab-bar">
@@ -881,21 +931,36 @@ window.burst=b=>{
 const SC=["#f3f9b5","#f8b4b9","#aef0d1","#cdb4f6","#e4f7b7"];
 const stk=(n,mod)=>{const h=[...n.id].reduce((a,c)=>a+c.charCodeAt(0),0);return`<div class="stk" style="--c:${SC[h%5]};--r:${(h%7)-3}deg"><p>${esc(n.text)}</p><span>– ${esc(n.author)}</span>${mod?`<button onclick="delItem('notes','${n.id}','lưu bút')">xóa</button>`:""}</div>`};
 
-const polaroid=(p,own)=>`<figure class="pol" style="position:relative">
+const getMyLikeKeys=cid=>{
+  const keys=["dev:"+devId];
+  const mid=cid?store("me_"+cid):null;
+  if(mid)keys.push("mem:"+mid);
+  return keys;
+};
+const getLocalLikes=()=>{const a=store("ky_likes");return Array.isArray(a)?a:[]};
+const setLocalLikes=arr=>store("ky_likes",[...new Set(arr)]);
+const isPhotoLiked=p=>{
+  if(!p)return false;
+  const keys=getMyLikeKeys(p.classId);
+  const likedBy=Array.isArray(p.likedBy)?p.likedBy:[];
+  return keys.some(k=>likedBy.includes(k))||getLocalLikes().includes(p.id);
+};
+
+const polaroid=(p,own)=>{const liked=isPhotoLiked(p);return`<figure class="pol" style="position:relative">
   <div class="cursor-zoom-in" data-lb="${p.id}">
     <img loading="lazy" class="w-full aspect-[4/5] object-cover" src="${esc(opt(p.url,400))}" onload="this.style.filter='none'" onerror="this.style.filter='none'" style="filter:blur(12px);transition:filter .6s" alt="">
   </div>
-  <div class="ky22-wrap absolute bottom-1 left-2">
-    <button class="text-sm font-bold" data-heart="${p.id}" style="background:none;border:0;cursor:pointer">❤ <span>${p.hearts||0}</span></button>
+  <div class="ky22-wrap">
+    <button type="button" class="ky-heart ${liked?"is-liked":""}" data-heart="${p.id}" aria-pressed="${liked?"true":"false"}" aria-label="Thả tim ảnh"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><span>${p.hearts||0}</span></button>
   </div>
-  ${own?`<button class="absolute bottom-1 right-2 text-xs underline" onclick="delItem('photos','${p.id}','ảnh')">xóa</button>`:""}
-</figure>`;
+  ${own?`<button class="absolute bottom-2 right-2.5 text-xs underline" onclick="delItem('photos','${p.id}','ảnh')">xóa</button>`:""}
+</figure>`};
 
 window.delItem=(c,id,l)=>confirmDel(l,async()=>{await db.del(c,id);redraw?.();route()});
 
 function memberTab(id){const ms=by("members","classId",id),cls=get("classes",id);
   return`<button class="btn sun w-full mb-3" onclick="newMember('${id}')">＋ Tạo trang cá nhân của bạn</button>
-  <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">${ms.map(m=>`<a href="#/m/${m.id}" data-mid="${m.id}" class="card p-3 text-center block"><div class="w-20 h-20 rounded-full overflow-hidden mx-auto bg-white border-2 border-[var(--ink)]">${m.avatar?`<img loading="lazy" src="${esc(opt(m.avatar,160))}" class="w-full h-full object-cover" alt="${esc(m.name)}">`:""}</div><b class="block mt-2">${esc(m.name)}</b><span class="text-xs opacity-70 block">${esc(m.quote)}</span>${cls?.ownerMemberId===m.id?`<span class="inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-bold" style="background:var(--sun);color:var(--ink)">👑 Quản lý lớp</span>`:""}</a>`).join("")||"<p>Chưa có thành viên.</p>"}</div>`}
+  <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">${ms.map(m=>{const ini=esc((m.name||"?").trim().charAt(0).toUpperCase()||"?");return`<a href="#/m/${m.id}" data-mid="${m.id}" class="block rounded-2xl bg-white p-2 pb-3 border border-slate-200/80 shadow-sm hover:shadow-md transition-shadow"><div class="relative w-full aspect-[4/5] rounded-xl overflow-hidden bg-slate-100">${m.avatar?`<img loading="lazy" src="${esc(opt(m.avatar,500))}" class="w-full h-full object-cover object-top" alt="${esc(m.name)}">`:`<div class="w-full h-full flex items-center justify-center bg-slate-100 text-slate-400 font-bold text-3xl select-none">${ini}</div>`}${cls?.ownerMemberId===m.id?`<span class="absolute top-1.5 right-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold shadow-sm" style="background:var(--sun);color:var(--ink)">👑 Quản lý lớp</span>`:""}</div><div class="mt-2.5 text-center font-bold text-sm sm:text-base text-[var(--ink)] truncate">${esc(m.name)}</div></a>`}).join("")||"<p>Chưa có thành viên.</p>"}</div>`}
 
 function after(id){
   const fi=$("#fi"),dr=$("#drop");
@@ -956,10 +1021,63 @@ window.addNote=async(cid,b)=>{if(!inClass(cid))return enterCode(cid);const a=v("
 
 /* ===== #061 – Lightbox toàn màn hình ===== */
 function bindGallery(){
-  $$("[data-heart]").forEach(b=>b.onclick=async e=>{
-    const p=get("photos",b.dataset.heart);p.hearts=(p.hearts||0)+1;
-    b.querySelector("span").textContent=p.hearts;
-    burst(b);await db.set("photos",p);
+  $$("[data-heart]").forEach(b=>b.onclick=async()=>{
+    if(b.dataset.busy==="1")return;
+    b.dataset.busy="1";
+    const p=get("photos",b.dataset.heart);
+    if(!p){b.dataset.busy="";return}
+    const prevHearts=p.hearts||0;
+    const prevLikedBy=Array.isArray(p.likedBy)?[...p.likedBy]:undefined;
+    const prevLikeLog=Array.isArray(p.likeLog)?p.likeLog.map(x=>({...x})):undefined;
+    const prevLocal=getLocalLikes();
+    const keys=getMyLikeKeys(p.classId);
+    const already=isPhotoLiked(p);
+    let likedBy=Array.isArray(p.likedBy)?[...p.likedBy]:[];
+    let likeLog=Array.isArray(p.likeLog)?[...p.likeLog]:[];
+    const actorMid=getActorMemberId(p.classId);
+    const span=b.querySelector("span");
+    const syncMemberTotal=()=>{
+      const totEl=document.getElementById("member-total-hearts");
+      if(totEl&&p.memberId){
+        totEl.textContent=by("photos","memberId",p.memberId).reduce((sum,ph)=>sum+(Number(ph.hearts)||0),0);
+      }
+    };
+    try{
+      if(!already){
+        keys.forEach(k=>{if(!likedBy.includes(k))likedBy.push(k)});
+        likeLog=likeLog.filter(x=>!(x&&(x.dev===devId||(actorMid&&x.mid===actorMid))));
+        likeLog.push({dev:devId,mid:actorMid,ts:Date.now()});
+        p.hearts=prevHearts+1;
+        setLocalLikes([...prevLocal,p.id]);
+        b.classList.add("is-liked");
+        b.setAttribute("aria-pressed","true");
+        burst(b);
+      }else{
+        likedBy=likedBy.filter(k=>!keys.includes(k));
+        likeLog=likeLog.filter(x=>!(x&&(x.dev===devId||(actorMid&&x.mid===actorMid))));
+        p.hearts=Math.max(0,prevHearts-1);
+        setLocalLikes(prevLocal.filter(id=>id!==p.id));
+        b.classList.remove("is-liked");
+        b.setAttribute("aria-pressed","false");
+      }
+      p.likedBy=likedBy;
+      p.likeLog=likeLog;
+      if(span)span.textContent=p.hearts;
+      syncMemberTotal();
+      await db.set("photos",p);
+    }catch(err){
+      p.hearts=prevHearts;
+      if(prevLikedBy===undefined)delete p.likedBy;else p.likedBy=prevLikedBy;
+      if(prevLikeLog===undefined)delete p.likeLog;else p.likeLog=prevLikeLog;
+      setLocalLikes(prevLocal);
+      b.classList.toggle("is-liked",already);
+      b.setAttribute("aria-pressed",already?"true":"false");
+      if(span)span.textContent=prevHearts;
+      syncMemberTotal();
+      toastErr(err?.message||"Không thể cập nhật lượt thả tim.");
+    }finally{
+      b.dataset.busy="";
+    }
   });
   $$("[data-lb]").forEach(el=>el.onclick=()=>{
     const list=$$("[data-lb]").map(x=>get("photos",x.dataset.lb));
@@ -1086,6 +1204,8 @@ function ClassManagementModal(cid){
   const ownerObj=c.ownerMemberId?get("members",c.ownerMemberId):null;
   const roleLabel=isClassOwnerMember(c)?`👑 Chủ lớp (${esc(ownerObj?.name||"Thành viên")})`:isClassCreator(c)?"👑 Người tạo lớp":isClassPassAuthed(cid)?"🔑 Quản trị lớp":"🛡 Admin tổng";
   const otherMembers=by("members","classId",cid).filter(m=>m.id!==c.ownerMemberId);
+  const delPending=c.deleteReq?.status==="pending";
+  const delStat=delPending?calcDeleteVote(c):null;
   sheet(`<div class="flex items-center justify-between gap-2 mb-3">
       <h3 class="hand text-3xl leading-none">Quản lý lớp ${esc(c.name)}</h3>
       <span class="text-xs font-bold px-2.5 py-1 rounded-full shrink-0" style="background:var(--sun);color:var(--ink)">${roleLabel}</span>
@@ -1128,7 +1248,11 @@ function ClassManagementModal(cid){
         <button id="cm-transfer-btn" type="button" class="btn ghost w-full text-sm">Chuyển quyền</button>
       `:`<p class="text-xs opacity-70">Chưa có thành viên khác trong lớp để chuyển quyền.</p>`}
     </div>
-    <button id="dc" type="button" class="btn w-full" style="background:var(--coral)">🗑 Xóa lớp</button>`);
+    ${delPending?`<div class="card p-3" style="box-shadow:none;border-color:var(--coral);background:#fff5f6">
+      <div class="text-sm font-bold mb-1" style="color:var(--coral)">⏳ Đang biểu quyết xóa lớp</div>
+      <p class="text-xs mb-2">Đồng ý: <b>${delStat.yes}/${delStat.total} (${delStat.yesPct}%)</b> · Không đồng ý: <b>${delStat.no}/${delStat.total}</b> · Cần ≥ 60% để xóa</p>
+      <button id="dc-cancel" type="button" class="btn ghost w-full text-sm">Hủy yêu cầu xóa lớp</button>
+    </div>`:`<button id="dc" type="button" class="btn w-full" style="background:var(--coral)">🗑 Xóa lớp</button>`}`);
 
   $("#ee-name").value=c.name||"";
   $("#ee-year").value=c.year||"";
@@ -1180,13 +1304,130 @@ function ClassManagementModal(cid){
     confirmTransferClass(cid,target);
   });
 
-  $("#dc").onclick=()=>confirmDel(c.name,async()=>{
-    for(const k of["members","photos","videos","notes"])for(const x of by(k,"classId",cid))await db.del(k,x.id);
-    await db.del("classes",cid);location.hash="#/s/"+c.schoolId;
+  $("#dc-cancel")?.addEventListener("click",async()=>{
+    const btn=$("#dc-cancel"),prev=btn.innerHTML;
+    btn.disabled=true;btn.textContent="Đang hủy...";
+    try{
+      c.deleteReq=null;
+      await db.set("classes",c);
+      toast("Đã hủy yêu cầu xóa lớp ✔");
+      await _origRoute();
+      ClassManagementModal(cid);
+    }catch(e){toastErr(e?.message||"Không thể hủy yêu cầu xóa lớp.")}
+    finally{if(btn.isConnected){btn.disabled=false;btn.innerHTML=prev}}
+  });
+
+  $("#dc")?.addEventListener("click",()=>{
+    const ms=by("members","classId",cid);
+    if(ms.length===0){
+      confirmDel(c.name,async()=>{await purgeClass(cid);location.hash="#/s/"+c.schoolId});
+      return;
+    }
+    sheet(`<h3 class="hand text-3xl mb-2">⚠️ Gửi yêu cầu xóa lớp ${esc(c.name)}</h3>
+      <p class="text-sm mb-4 leading-relaxed">Lớp chưa bị xóa ngay. Hệ thống sẽ gửi yêu cầu biểu quyết bắt buộc tới tất cả thành viên (<b>${ms.length} thành viên</b>); cần ít nhất <b>60% thành viên đồng ý</b> thì lớp mới bị xóa.</p>
+      <p id="dr-err" class="text-sm font-bold mb-2 hidden" style="color:var(--coral)"></p>
+      <div class="flex gap-2">
+        <button id="dr-cancel" type="button" class="btn ghost flex-1">Hủy</button>
+        <button id="dr-ok" type="button" class="btn flex-1" style="background:var(--coral)">Gửi yêu cầu</button>
+      </div>`);
+    $("#dr-cancel").onclick=()=>ClassManagementModal(cid);
+    const okBtn=$("#dr-ok"),errEl=$("#dr-err");
+    okBtn.onclick=async()=>{
+      if(okBtn.disabled)return;
+      const prev=okBtn.innerHTML;okBtn.disabled=true;okBtn.textContent="Đang gửi...";
+      try{
+        c.deleteReq={status:"pending",createdAt:Date.now(),votes:{}};
+        await db.set("classes",c);
+        closeSheet();
+        toast("Đã gửi yêu cầu xóa lớp tới các thành viên (cần ≥ 60% đồng ý).");
+        route();
+      }catch(e){
+        if(errEl){errEl.textContent=e?.message||"Không thể gửi yêu cầu xóa lớp.";errEl.classList.remove("hidden")}
+        toastErr(e?.message||"Không thể gửi yêu cầu xóa lớp.");
+      }finally{if(okBtn.isConnected){okBtn.disabled=false;okBtn.innerHTML=prev}}
+    };
   });
 }
 window.manage=cid=>ClassManagementModal(cid);
 window.regen=async cid=>{const c=get("classes",cid);let n;do n=String(Math.floor(Math.random()*1e5)).padStart(5,"0");while(S.classes.some(x=>x.code===n));c.code=n;await db.set("classes",c);clearClassAuth(cid);$("#class-auth-badge")?.classList.add("hidden");toast("Đã tạo mã lớp mới ✔");ClassManagementModal(cid)};
+
+function openDeleteVoteModal(cid,mid){
+  const c=get("classes",cid),m=get("members",mid);
+  if(!c||!m||c.deleteReq?.status!=="pending")return;
+  if(c.deleteReq.votes?.[mid])return;
+  if($("#modal")?.querySelector(".sheet[data-locked='1']"))return;
+  const renderStep1=()=>{
+    const st=calcDeleteVote(c);
+    sheet(`<h3 class="hand text-3xl mb-2" style="color:var(--coral)">⚠️ Yêu cầu xóa lớp ${esc(c.name)}</h3>
+      <p class="text-sm mb-3 leading-relaxed">Quản lý lớp đã gửi yêu cầu xóa vĩnh viễn lớp này (kèm toàn bộ ảnh, video, lưu bút và trang thành viên). Cần ít nhất <b>60% thành viên đồng ý</b> để xóa.</p>
+      <div class="card p-3 mb-3 text-xs sm:text-sm" style="box-shadow:none">
+        <div>Tiến độ hiện tại: Đồng ý <b>${st.yes}/${st.total} (${st.yesPct}%)</b> · Không đồng ý: <b>${st.no}/${st.total}</b></div>
+        <div class="mt-1 opacity-80">Đang bỏ phiếu với tư cách: <b>${esc(m.name)}</b></div>
+      </div>
+      <div class="flex flex-col gap-2">
+        <button id="dv-yes" type="button" class="btn w-full" style="background:var(--coral);color:#fff">Đồng ý xóa lớp</button>
+        <button id="dv-no" type="button" class="btn w-full" style="background:var(--ux-mint);color:#fff">Không đồng ý (Giữ lại lớp)</button>
+      </div>`,true);
+    $("#dv-yes").onclick=()=>renderStep2("yes");
+    $("#dv-no").onclick=()=>renderStep2("no");
+  };
+  const renderStep2=choice=>{
+    const label=choice==="yes"?"ĐỒNG Ý XÓA LỚP":"KHÔNG ĐỒNG Ý XÓA LỚP";
+    sheet(`<h3 class="hand text-3xl mb-2">Xác nhận quyết định</h3>
+      <p class="text-sm mb-4 leading-relaxed">Bạn chắc chắn chọn <b>${label}</b> cho lớp <b>${esc(c.name)}</b>? Lựa chọn này không thể thay đổi sau khi xác nhận.</p>
+      <p id="dv-err" class="text-sm font-bold mb-2 hidden" style="color:var(--coral)"></p>
+      <div class="flex gap-2">
+        <button id="dv-back" type="button" class="btn ghost flex-1">← Chọn lại</button>
+        <button id="dv-confirm" type="button" class="btn flex-1" style="background:${choice==="yes"?"var(--coral)":"var(--ux-mint)"};color:#fff">✔ Xác nhận quyết định</button>
+      </div>`,true);
+    $("#dv-back").onclick=renderStep1;
+    const cfBtn=$("#dv-confirm"),errEl=$("#dv-err");
+    cfBtn.onclick=async()=>{
+      if(cfBtn.disabled)return;
+      const prev=cfBtn.innerHTML;cfBtn.disabled=true;cfBtn.textContent="Đang lưu...";
+      try{
+        const cur=get("classes",cid)||c;
+        if(!cur.deleteReq||cur.deleteReq.status!=="pending"){closeSheet();route();return}
+        cur.deleteReq.votes={...(cur.deleteReq.votes||{}),[mid]:choice};
+        const st=calcDeleteVote(cur);
+        if(st.passed){
+          await purgeClass(cid);
+          closeSheet();
+          toast(`Đủ 60% thành viên đồng ý — Lớp ${cur.name} đã được xóa.`);
+          location.hash=get("schools",cur.schoolId)?"#/s/"+cur.schoolId:"#/";
+        }else if(st.failed){
+          cur.deleteReq=null;
+          await db.set("classes",cur);
+          closeSheet();
+          toast(`Không đủ 60% đồng ý — Lớp ${cur.name} được giữ lại ✔`);
+          route();
+        }else{
+          await db.set("classes",cur);
+          closeSheet();
+          toast("Đã ghi nhận lựa chọn của bạn ✔");
+          route();
+        }
+      }catch(e){
+        if(errEl){errEl.textContent=e?.message||"Không thể lưu biểu quyết.";errEl.classList.remove("hidden")}
+        toastErr(e?.message||"Không thể lưu biểu quyết.");
+      }finally{if(cfBtn.isConnected){cfBtn.disabled=false;cfBtn.innerHTML=prev}}
+    };
+  };
+  renderStep1();
+}
+window.openDeleteVoteModal=openDeleteVoteModal;
+
+function checkPendingDeleteVote(){
+  if($("#modal")?.querySelector(".sheet"))return;
+  for(const c of S.classes){
+    if(c.deleteReq?.status!=="pending")continue;
+    const mid=store("me_"+c.id);
+    if(!mid||!get("members",mid))continue;
+    if(c.deleteReq.votes?.[mid])continue;
+    openDeleteVoteModal(c.id,mid);
+    break;
+  }
+}
 
 /* ============ THÀNH VIÊN ============ */
 window.newMember=(cid,prefill="")=>{
@@ -1229,7 +1470,7 @@ window.newMember=(cid,prefill="")=>{
       if(pin.length<4)return showErr("Mã PIN cần ít nhất 4 số.");
       okBtn.disabled=true;okBtn.textContent="Đang tạo trang...";
       let av="";const f=modalBox.querySelector("#ma")?.files?.[0];
-      if(f)av=await uploadImage(f,{crop:true,size:256,btn:okBtn,loadingText:"Đang tải ảnh đại diện..."});
+      if(f)av=await uploadImage(f,{crop:false,btn:okBtn,loadingText:"Đang tải ảnh đại diện..."});
       okBtn.disabled=true;okBtn.textContent="Đang lưu hồ sơ...";
       const mq=(modalBox.querySelector("#mq")?.value||"").trim();
       const m={id:uid(),classId:cid,name,quote:mq,pinHash:await sha(pin),avatar:av};
@@ -1239,11 +1480,82 @@ window.newMember=(cid,prefill="")=>{
     }catch(e){showErr(e?.message||"Có lỗi xảy ra khi tạo trang cá nhân.")}
     finally{if(okBtn.isConnected){okBtn.disabled=false;okBtn.innerHTML=prev}}}};
 
-function memberPage(id){const m=get("members",id);if(!m)return"<p>Không tìm thấy.</p>";const c=get("classes",m.classId),own=canMem(m),ph=by("photos","memberId",id);
-  return`${crumbs([["Trang chủ","#/"],[c.name,"#/c/"+c.id],[m.name]])}<div class="text-center"><div class="w-28 h-28 rounded-full overflow-hidden mx-auto bg-white border-4 border-white shadow">${m.avatar?`<img loading="lazy" src="${esc(opt(m.avatar,240))}" class="w-full h-full object-cover" alt="${esc(m.name)}">`:""}</div>${head(m.name,m.quote)}</div>
-  ${own?`<div>${dropZoneHtml("drop","fi","up","＋ Tải ảnh lên album")}</div><button class="btn ghost text-sm mb-3" onclick="editMember('${id}')">✎ Chỉnh sửa hồ sơ</button>`:`<button class="btn ghost text-sm mb-3" onclick="pinLogin('${id}')">🔒 Đây là trang của tôi</button>`}
+function memberPage(id){const m=get("members",id);if(!m)return"<p>Không tìm thấy.</p>";const c=get("classes",m.classId),own=canMem(m),allowLikers=canViewLikers(m),ph=by("photos","memberId",id),totalHearts=ph.reduce((sum,p)=>sum+(Number(p.hearts)||0),0),q=(m.quote||"").trim(),qAlign=q.includes("\n")||q.length>50?"text-left":"text-center";
+  const heartSvg=`<svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="#ff3b5c" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+  const badgeCls="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border-2 border-[var(--ink)] font-bold text-xs sm:text-sm whitespace-nowrap shrink-0";
+  const heartBox=allowLikers
+    ?`<button type="button" onclick="showMemberLikers('${id}')" class="${badgeCls} cursor-pointer hover:bg-rose-50 transition-colors" title="Xem người đã thả tim">${heartSvg}<span id="member-total-hearts">${totalHearts}</span></button>`
+    :`<div class="${badgeCls} cursor-default">${heartSvg}<span id="member-total-hearts">${totalHearts}</span></div>`;
+  return`${crumbs([["Trang chủ","#/"],[c.name,"#/c/"+c.id],[m.name]])}<div class="text-center"><div class="w-28 h-28 rounded-full overflow-hidden mx-auto bg-white border-4 border-white shadow">${m.avatar?`<img loading="lazy" src="${esc(opt(m.avatar,240))}" class="w-full h-full object-cover" alt="${esc(m.name)}">`:""}</div>${head(m.name)}${q?`<div class="max-w-lg mx-auto mt-2 mb-4 px-4 py-3 rounded-2xl bg-white/85 border border-slate-200/80 shadow-sm text-sm text-[var(--ink)] ${qAlign} whitespace-pre-line break-words leading-relaxed">${esc(m.quote)}</div>`:""}</div>
+  ${own?`<div class="flex items-center justify-between gap-1.5 sm:gap-2 mb-3"><button type="button" class="btn ghost !px-2.5 sm:!px-4 !py-2 text-xs sm:text-sm whitespace-nowrap" onclick="editMember('${id}')">✎ Chỉnh sửa hồ sơ</button>${heartBox}<button type="button" id="drop" class="btn sun !px-2.5 sm:!px-4 !py-2 text-xs sm:text-sm whitespace-nowrap inline-flex items-center gap-1" style="border:2px solid transparent" ondragover="event.preventDefault()"><svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 19H7a4.5 4.5 0 0 1-.5-9 6.5 6.5 0 0 1 12.5-1.5A5 5 0 0 1 19 19h-1.5M12 12v9M9 15l3-3 3 3"/></svg><span>＋ Tải ảnh lên album</span></button></div><input id="fi" type="file" multiple accept="image/*" hidden><ul class="kyup-list mb-3" id="up"></ul>`:`<div class="flex items-center justify-between gap-2 mb-3"><button type="button" class="btn ghost text-sm" onclick="pinLogin('${id}')">🔒 Đây là trang của tôi</button>${heartBox}</div>`}
   <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">${ph.map(p=>polaroid(p,own)).join("")||"<p class='col-span-3 text-center'>Chưa có ảnh trong album.</p>"}</div>
   ${isAdmin()?`<button class="btn ghost mt-6" onclick="delItem('members','${id}','${esc(m.name)}')">Xóa trang (Admin)</button>`:""}`}
+
+window.showMemberLikers=id=>{
+  const m=get("members",id);
+  if(!canViewLikers(m))return;
+  const ph=by("photos","memberId",id);
+  const totalHearts=ph.reduce((sum,p)=>sum+(Number(p.hearts)||0),0);
+  const memberMap=new Map(),guestMap=new Map();
+  let extraStranger=0;
+  ph.forEach(p=>{
+    let entries=[];
+    if(Array.isArray(p.likeLog)&&p.likeLog.length){
+      entries=p.likeLog;
+    }else if(Array.isArray(p.likedBy)&&p.likedBy.length){
+      const memIds=p.likedBy.filter(k=>String(k).startsWith("mem:")).map(k=>String(k).slice(4));
+      const devIds=p.likedBy.filter(k=>String(k).startsWith("dev:")).map(k=>String(k).slice(4));
+      memIds.forEach(mid=>entries.push({dev:"",mid,ts:0}));
+      const extraDevs=Math.max(0,devIds.length-memIds.length);
+      for(let i=0;i<extraDevs;i++)entries.push({dev:devIds[i]||"",mid:null,ts:0});
+    }
+    entries.forEach(e=>{
+      const u=e?.mid?get("members",e.mid):null;
+      const ts=Number(e?.ts)||0;
+      if(u){
+        const cur=memberMap.get(u.id)||{member:u,count:0,ts:0};
+        cur.count+=1;cur.ts=Math.max(cur.ts,ts);
+        memberMap.set(u.id,cur);
+      }else{
+        const gk=e?.dev?("dev:"+e.dev):("anon:"+p.id);
+        const cur=guestMap.get(gk)||{count:0,ts:0};
+        cur.count+=1;cur.ts=Math.max(cur.ts,ts);
+        guestMap.set(gk,cur);
+      }
+    });
+    const pHearts=Number(p.hearts)||0;
+    if(pHearts>entries.length)extraStranger+=(pHearts-entries.length);
+  });
+  const memberList=[...memberMap.values()].sort((a,b)=>(b.ts-a.ts)||(b.count-a.count));
+  const guestTotal=[...guestMap.values()].reduce((s,g)=>s+g.count,0)+extraStranger;
+  const listHtml=totalHearts===0&&!memberList.length&&!guestTotal
+    ?`<p class="text-sm text-center opacity-70 py-4">Chưa có lượt thả tim nào.</p>`
+    :`<div class="flex flex-col gap-2 max-h-[60vh] overflow-y-auto">
+      ${memberList.map(({member:u,count})=>{
+        const clsName=get("classes",u.classId)?.name||"";
+        const ini=esc((u.name||"?").trim().charAt(0).toUpperCase()||"?");
+        return`<a href="#/m/${u.id}" onclick="closeSheet()" class="flex items-center gap-3 p-2.5 rounded-xl bg-white border border-slate-200 hover:bg-yellow-50 transition-colors">
+          <div class="w-10 h-10 rounded-full overflow-hidden bg-slate-100 border border-slate-200 shrink-0 flex items-center justify-center font-bold text-slate-500">${u.avatar?`<img src="${esc(opt(u.avatar,120))}" class="w-full h-full object-cover object-top" alt="${esc(u.name)}">`:ini}</div>
+          <div class="flex-1 min-w-0">
+            <div class="font-bold text-sm text-[var(--ink)] truncate">${esc(u.name)}</div>
+            ${clsName?`<div class="text-xs opacity-60 truncate">Lớp ${esc(clsName)}</div>`:""}
+          </div>
+          ${count>1?`<span class="text-xs font-bold px-2 py-0.5 rounded-full shrink-0" style="color:#ff3b5c;background:#fff1f3">❤ ${count}</span>`:`<span class="text-sm shrink-0" style="color:#ff3b5c">❤</span>`}
+        </a>`;
+      }).join("")}
+      ${guestTotal>0?`<div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50 border border-slate-200/80">
+        <div class="w-10 h-10 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="font-bold text-sm text-[var(--ink)]">Người Lạ</div>
+          <div class="text-xs opacity-60">Khách chưa đăng nhập</div>
+        </div>
+        ${guestTotal>1?`<span class="text-xs font-bold px-2 py-0.5 rounded-full shrink-0" style="color:#ff3b5c;background:#fff1f3">❤ ${guestTotal}</span>`:`<span class="text-sm shrink-0" style="color:#ff3b5c">❤</span>`}
+      </div>`:""}
+    </div>`;
+  sheet(`<h3 class="hand text-3xl mb-3">Người đã thả tim (❤ ${totalHearts})</h3>${listHtml}`);
+};
 
 document.addEventListener("DOMContentLoaded",()=>{});
 new MutationObserver(()=>{
@@ -1285,7 +1597,7 @@ window.editMember=id=>{const m=get("members",id);
   $("#e1").value=m.name;document.getElementById("e2").value=m.quote||"";
   $("#ok").onclick=async()=>{const btn=$("#ok"),f=$("#e3").files[0],prev=btn.innerHTML;btn.disabled=true;btn.textContent="Đang lưu...";
     try{
-      let nextAv=m.avatar||"";if(f)nextAv=await uploadImage(f,{crop:true,size:256,btn,loadingText:"Đang tải ảnh đại diện..."});
+      let nextAv=m.avatar||"";if(f)nextAv=await uploadImage(f,{crop:false,btn,loadingText:"Đang tải ảnh đại diện..."});
       btn.disabled=true;btn.textContent="Đang lưu hồ sơ...";
       m.avatar=nextAv;m.name=v("e1")||m.name;m.quote=document.getElementById("e2")?.value??m.quote;
       await db.set("members",m);closeSheet();toast("Đã lưu hồ sơ ✔");route();
@@ -1345,6 +1657,7 @@ window.route=async function(){
   await _origRoute();
   if(location.hash===""||location.hash==="#/"||location.hash==="#"){initFan()}
   if(location.hash.includes("admin"))initStorageBar();
+  checkPendingDeleteVote();
 };
 
 /* ============ KHỞI ĐỘNG ============ */
