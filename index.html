@@ -37,7 +37,7 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--sky);color:var(--i
 .hand{font-family:'Caveat',cursive}
 .ul{background:linear-gradient(transparent 62%,var(--sun) 62%,var(--sun) 92%,transparent 92%);background-size:0 100%;background-repeat:no-repeat;animation:ul .9s .2s forwards}
 @keyframes ul{to{background-size:100% 100%}}
-.btn{background:var(--ink);color:#fff;border-radius:999px;padding:.6rem 1.2rem;font-weight:700}
+.btn{background:var(--ink);color:#fff;border-radius:999px;padding:.6rem 1.2rem;font-weight:700;touch-action:manipulation}
 .btn.sun{background:var(--sun);color:var(--ink)} .btn.ghost{background:#fff;color:var(--ink);border:2px solid var(--ink)}
 .inp{width:100%;border:2px solid var(--ink);border-radius:12px;padding:.6rem .8rem;background:#fff}
 .card{background:var(--paper);border-radius:14px;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}
@@ -115,18 +115,19 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--sky);color:var(--i
 
 /* ===== #429 – Search combobox ===== */
 .kysrc{position:relative}
-.kysrc-f{position:relative;z-index:2;display:flex;align-items:center;gap:8px;height:44px;padding:0 8px 0 12px;border-radius:14px;background:#fff;border:2px solid var(--ink);transition:box-shadow .2s}
-.kysrc-f:focus-within{box-shadow:0 0 0 3px rgba(255,93,115,.2)}
+.kysrc-f{position:relative;z-index:2;display:flex;align-items:center;gap:8px;height:44px;padding:0 8px 0 12px;border-radius:14px;background:#fff;border:2px solid var(--ink);cursor:text;transition:box-shadow .2s}
+.kysrc-f:focus-within{box-shadow:0 0 0 3px rgba(29,42,74,.12)}
 .kysrc-f>svg{flex:none;width:16px;height:16px;fill:none;stroke:var(--ux-ink-3);stroke-width:2;stroke-linecap:round}
 .kysrc-in{flex:1;min-width:0;border:0;background:none;outline:none;font-size:14px;font-weight:500;color:var(--ink)}
+.kysrc-in:focus,.kysrc-in:focus-visible{outline:none;box-shadow:none}
 .kysrc-in::placeholder{color:var(--ux-ink-3)}
-.kysrc-dd{position:absolute;left:0;right:0;top:calc(100% + 6px);border-radius:14px;background:#fff;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);overflow:hidden;transform-origin:50% 0;opacity:0;transform:translateY(-8px) scale(.96);visibility:hidden;transition:opacity .16s,transform .2s,visibility 0s linear .2s;z-index:30}
+.kysrc-dd{position:absolute;left:0;right:0;top:calc(100% + 6px);padding:4px;border-radius:14px;background:#fff;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);overflow:hidden;transform-origin:50% 0;opacity:0;transform:translateY(-8px) scale(.96);visibility:hidden;transition:opacity .16s,transform .2s,visibility 0s linear .2s;z-index:30}
 .kysrc.is-open .kysrc-dd{opacity:1;transform:none;visibility:visible;transition:opacity .18s,transform .3s cubic-bezier(.3,1.4,.5,1),visibility 0s}
 .kysrc-pill{position:absolute;left:4px;right:4px;top:4px;height:38px;border-radius:9px;background:rgba(29,42,74,.07);transform:translateY(var(--py,0px));opacity:var(--po,0);transition:transform .4s cubic-bezier(.3,1.5,.5,1),opacity .15s;pointer-events:none}
-.kysrc-o{position:relative;display:flex;align-items:center;gap:10px;height:38px;padding:0 10px;border-radius:9px;cursor:pointer;color:var(--ux-ink-2)}
+.kysrc-o{position:relative;display:flex;align-items:center;gap:10px;height:38px;padding:0 10px;border-radius:9px;cursor:pointer;color:var(--ux-ink-2);text-decoration:none}
 .kysrc-o[aria-selected="true"]{color:var(--ink)}
 .kysrc-t{flex:1;min-width:0;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.kysrc-t mark{background:none;color:var(--coral);font-weight:700}
+.kysrc-t mark{background:rgba(255,210,63,.55);color:var(--ink);font-weight:700;border-radius:3px;padding:0 1px}
 .kysrc-m{flex:none;font-size:11px;color:var(--ux-ink-3)}
 .kysrc-no{padding:10px;font-size:13px;color:var(--ux-ink-3)}
 
@@ -172,7 +173,7 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--sky);color:var(--i
 .kypin-dots.is-ok .kypin-ok path{animation:kypin-draw .35s cubic-bezier(.2,.8,.2,1) .55s forwards}
 @keyframes kypin-draw{to{stroke-dashoffset:0}}
 .kypin-pad{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:44px;gap:4px;margin-top:8px}
-.kypin-k{position:relative;display:grid;place-items:center;padding:0;border:0;border-radius:14px;background:none;color:var(--ink);font-size:22px;font-weight:600;cursor:pointer;font-variant-numeric:tabular-nums;transition:transform .15s}
+.kypin-k{position:relative;display:grid;place-items:center;padding:0;border:0;border-radius:14px;background:none;color:var(--ink);font-size:22px;font-weight:600;cursor:pointer;font-variant-numeric:tabular-nums;touch-action:manipulation;transition:transform .15s}
 .kypin-k::before{content:"";position:absolute;left:50%;top:50%;width:48px;height:40px;margin:-20px 0 0 -24px;border-radius:12px;background:rgba(29,42,74,.07);opacity:0;transform:scale(.5);transition:opacity .25s,transform .4s cubic-bezier(.34,1.6,.5,1)}
 .kypin-k:hover::before{opacity:.7;transform:scale(.9)}
 .kypin-k:active::before,.kypin-k.dn::before{opacity:1;transform:scale(1.05);transition-duration:.08s,.12s}
@@ -220,6 +221,10 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--sky);color:var(--i
 .kyup-pct{font-size:11px;color:var(--ux-ink-3);font-variant-numeric:tabular-nums;min-width:30px;text-align:right}
 .kyup-bar{position:absolute;left:0;bottom:0;height:3px;background:var(--coral);transform-origin:0 50%;transition:transform .2s linear}
 .kyup-row.done .kyup-bar{background:var(--ux-mint)}
+.kyup-row.fail{border-color:var(--coral);background:#fff5f6}
+.kyup-row.fail .kyup-pct{color:var(--coral);font-weight:700}
+.kyup-err{display:block;font-size:11px;color:var(--coral);font-weight:600;margin-top:2px;text-align:left}
+.kydrop.is-uploading{pointer-events:none;opacity:.75}
 
 /* ===== #472 – Admin storage bar ===== */
 .kyst-bar{position:relative;display:flex;gap:2px;height:24px;border-radius:6px;overflow:hidden;margin:8px 0 4px}
@@ -302,7 +307,7 @@ body{font-family:'Be Vietnam Pro',sans-serif;background:var(--sky);color:var(--i
 <script type="module">
 /* ============ CẤU HÌNH ============ */
 const CONFIG={
- cloudName:"flchldsh", uploadPreset:"ki_niem_upload",
+ cloudName:"flchldsh", uploadPreset:"ki-niem-upload",
  firebaseConfig:{
   apiKey:"AIzaSyBbbapYSmvnZPKEnhoFLRo0NpwzwUPBYEs",
   authDomain:"web-ki-niem.firebaseapp.com",
@@ -319,9 +324,34 @@ const FB=typeof CONFIG.firebaseConfig==="object", CL=!CONFIG.cloudName.startsWit
 const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const uid=()=>Math.random().toString(36).slice(2,10);
-const sha=async t=>[...new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t)))].map(b=>b.toString(16).padStart(2,"0")).join("");
+const sha=async t=>{
+  const s=String(t??"");
+  if(globalThis.crypto?.subtle?.digest){
+    try{return[...new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s)))].map(b=>b.toString(16).padStart(2,"0")).join("")}catch{}
+  }
+  const bytes=typeof TextEncoder!=="undefined"?new TextEncoder().encode(s):Uint8Array.from(unescape(encodeURIComponent(s)),c=>c.charCodeAt(0));
+  const K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+  const H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  const bitLen=bytes.length*8,paddedLen=Math.ceil((bytes.length+9)/64)*64,m=new Uint8Array(paddedLen);
+  m.set(bytes);m[bytes.length]=0x80;
+  const dv=new DataView(m.buffer);dv.setUint32(paddedLen-8,Math.floor(bitLen/0x100000000),false);dv.setUint32(paddedLen-4,bitLen>>>0,false);
+  const w=new Uint32Array(64),ro=(x,n)=>(x>>>n)|(x<<(32-n));
+  for(let o=0;o<paddedLen;o+=64){
+    for(let i=0;i<16;i++)w[i]=dv.getUint32(o+i*4,false);
+    for(let i=16;i<64;i++){const s0=ro(w[i-15],7)^ro(w[i-15],18)^(w[i-15]>>>3),s1=ro(w[i-2],17)^ro(w[i-2],19)^(w[i-2]>>>10);w[i]=(w[i-16]+s0+w[i-7]+s1)>>>0}
+    let[a,b,c,d,e,f,g,h]=H;
+    for(let i=0;i<64;i++){
+      const S1=ro(e,6)^ro(e,11)^ro(e,25),ch=(e&f)^((~e)&g),t1=(h+S1+ch+K[i]+w[i])>>>0;
+      const S0=ro(a,2)^ro(a,13)^ro(a,22),maj=(a&b)^(a&c)^(b&c),t2=(S0+maj)>>>0;
+      h=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a;a=(t1+t2)>>>0;
+    }
+    H[0]=(H[0]+a)>>>0;H[1]=(H[1]+b)>>>0;H[2]=(H[2]+c)>>>0;H[3]=(H[3]+d)>>>0;H[4]=(H[4]+e)>>>0;H[5]=(H[5]+f)>>>0;H[6]=(H[6]+g)>>>0;H[7]=(H[7]+h)>>>0;
+  }
+  return H.map(x=>x.toString(16).padStart(8,"0")).join("");
+};
 const slug=s=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/đ/g,"d").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
-const toast=m=>{const t=$("#toast");t.innerHTML=`<div class="btn sun shadow-lg">${esc(m)}</div>`;setTimeout(()=>t.innerHTML="",2500)};
+const toast=(m,err=false)=>{const t=$("#toast");clearTimeout(toast._tm);t.innerHTML=`<div class="btn ${err?"":"sun "}shadow-lg text-center max-w-[90vw]" style="${err?"background:var(--coral);color:#fff":""}">${esc(m)}</div>`;toast._tm=setTimeout(()=>t.innerHTML="",err?6000:2500)};
+const toastErr=m=>toast(m,true);
 const COLS=["schools","classes","members","photos","videos","notes","settings"];
 const pic=(n,w=400,h=500)=>`https://picsum.photos/seed/ky${n}/${w}/${h}`;
 
@@ -341,31 +371,98 @@ const db={async load(){
    for(const c of COLS){const q=await F.getDocs(F.collection(fdb,c));S[c]=q.docs.map(d=>({id:d.id,...d.data()}))}
    if(!S.settings.length)await db.set("settings",{id:"cfg",limit:1,resets:[]});return}catch(e){console.warn("Firebase lỗi → Demo",e)}}
   const l=localStorage.getItem("ky_demo");S=l?JSON.parse(l):seed();COLS.forEach(c=>S[c]??=[]);save()},
- async set(c,o){const i=S[c].findIndex(x=>x.id===o.id);i<0?S[c].push(o):S[c][i]=o;save();if(fdb)await fs.setDoc(fs.doc(fdb,c,o.id),JSON.parse(JSON.stringify(o)))},
- async del(c,id){S[c]=S[c].filter(x=>x.id!==id);save();if(fdb)await fs.deleteDoc(fs.doc(fdb,c,id))}};
+ async set(c,o){const copy=JSON.parse(JSON.stringify(o));if(fdb){try{await fs.setDoc(fs.doc(fdb,c,o.id),copy)}catch(e){throw new Error(e?.code==="permission-denied"?"Lỗi Firestore: Chưa mở quyền ghi (Security Rules).":("Lỗi lưu dữ liệu: "+(e?.message||e)))}}const i=S[c].findIndex(x=>x.id===o.id);i<0?S[c].push(copy):S[c][i]=copy;save()},
+ async del(c,id){if(fdb){try{await fs.deleteDoc(fs.doc(fdb,c,id))}catch(e){throw new Error(e?.code==="permission-denied"?"Lỗi Firestore: Chưa mở quyền xóa (Security Rules).":("Lỗi xóa dữ liệu: "+(e?.message||e)))}}S[c]=S[c].filter(x=>x.id!==id);save()}};
 const save=()=>{if(!fdb)localStorage.setItem("ky_demo",JSON.stringify(S))};
 const cfg=()=>S.settings.find(s=>s.id==="cfg")||{limit:1,resets:[]};
 const by=(c,k,v)=>S[c].filter(x=>x[k]===v);
 const get=(c,id)=>S[c].find(x=>x.id===id);
 
 /* ============ ẢNH ============ */
-const opt=(u,w)=>u.includes("/upload/")?u.replace("/upload/",`/upload/f_auto,q_auto${w?",w_"+w:""}/`):u;
+const opt=(u,w)=>{if(!u||typeof u!=="string")return"";return u.includes("/upload/")?u.replace("/upload/",`/upload/f_auto,q_auto${w?",w_"+w:""}/`):u};
 // #258 – img với skeleton shimmer
-const img=(u,w,cls="")=>`<div class="blur-up ${cls}"><img loading="lazy" src="${esc(opt(u,w))}" onload="this.classList.add('ok')" alt=""></div>`;
+const img=(u,w,cls="")=>`<div class="blur-up ${cls}"><img loading="lazy" src="${esc(opt(u,w))}" onload="this.classList.add('ok')" onerror="this.classList.add('ok')" alt=""></div>`;
 // img raw (không wrapper)
-const imgRaw=(u,w,cls="")=>`<img loading="lazy" class="blur-up-img ${cls}" src="${esc(opt(u,w))}" onload="this.classList.add('ok')" alt="">`;
+const imgRaw=(u,w,cls="")=>`<img loading="lazy" class="blur-up-img ${cls}" src="${esc(opt(u,w))}" onload="this.classList.add('ok')" onerror="this.classList.add('ok')" alt="">`;
 
-async function upload(file,onp){
-  if(!CL)return new Promise(r=>{let p=0;const t=setInterval(()=>{onp(p+=25);if(p>=100){clearInterval(t);const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(file)}},120)});
-  return new Promise((res,rej)=>{const x=new XMLHttpRequest(),fd=new FormData();fd.append("file",file);fd.append("upload_preset",CONFIG.uploadPreset);
-   x.open("POST",`https://api.cloudinary.com/v1_1/${CONFIG.cloudName}/image/upload`);x.upload.onprogress=e=>onp(e.loaded/e.total*100);
-   x.onload=()=>x.status<300?res(JSON.parse(x.responseText).secure_url):rej();x.onerror=rej;x.send(fd)})}
+async function uploadImage(file,{crop=false,size=256,onProgress=()=>{},btn=null,loadingText="Đang tải ảnh..."}={}){
+  if(!file)throw new Error("Chưa chọn file ảnh.");
+  if(!file.size)throw new Error("File ảnh bị rỗng (0 byte).");
+  if(file.type&&!file.type.startsWith("image/"))throw new Error("Vui lòng chỉ chọn file ảnh (JPG, PNG, WebP...).");
+  if(file.size>15*1024*1024)throw new Error("Ảnh quá lớn (tối đa 15MB).");
+  const prevText=btn?btn.innerHTML:"",prevDisabled=btn?btn.disabled:false;
+  if(btn){btn.disabled=true;btn.style.opacity="0.7";btn.textContent=loadingText}
+  try{
+    const target=crop?await cropSquare(file,size):file;
+    if(!target||!target.size)throw new Error("Ảnh sau khi xử lý bị rỗng.");
+    if(!CL){
+      return await new Promise((res,rej)=>{
+        let p=0;const t=setInterval(()=>{
+          p=Math.min(100,p+25);onProgress(p);
+          if(p>=100){
+            clearInterval(t);
+            const r=new FileReader();
+            r.onload=()=>r.result?res(r.result):rej(new Error("Không đọc được dữ liệu ảnh."));
+            r.onerror=()=>rej(new Error("Lỗi đọc file ảnh trên trình duyệt."));
+            r.readAsDataURL(target);
+          }
+        },100);
+      });
+    }
+    return await new Promise((res,rej)=>{
+      const x=new XMLHttpRequest(),fd=new FormData();
+      fd.append("file",target,target.name||"image.jpg");
+      fd.append("upload_preset",CONFIG.uploadPreset);
+      x.open("POST",`https://api.cloudinary.com/v1_1/${CONFIG.cloudName}/image/upload`);
+      x.timeout=45000;
+      x.upload.onprogress=e=>{if(e.lengthComputable&&e.total>0)onProgress(Math.min(99,e.loaded/e.total*100))};
+      x.onload=()=>{
+        let data=null;try{data=JSON.parse(x.responseText)}catch{}
+        if(x.status>=200&&x.status<300&&data?.secure_url){onProgress(100);res(data.secure_url);return}
+        const msg=data?.error?.message||`HTTP ${x.status}`;
+        if(/upload preset/i.test(msg))rej(new Error(`Lỗi Cloudinary: Preset "${CONFIG.uploadPreset}" chưa tồn tại hoặc chưa bật Unsigned trên cloud "${CONFIG.cloudName}".`));
+        else if(/cloud_name/i.test(msg))rej(new Error(`Lỗi Cloudinary: Sai cloudName "${CONFIG.cloudName}".`));
+        else if(/file size/i.test(msg))rej(new Error("Ảnh vượt quá dung lượng cho phép của Cloudinary."));
+        else rej(new Error("Lỗi tải ảnh lên Cloudinary: "+msg));
+      };
+      x.onerror=()=>rej(new Error("Lỗi mạng khi tải ảnh lên Cloudinary."));
+      x.ontimeout=()=>rej(new Error("Quá thời gian chờ khi tải ảnh (timeout)."));
+      x.send(fd);
+    });
+  }finally{
+    if(btn){btn.disabled=prevDisabled;btn.style.opacity="";btn.innerHTML=prevText}
+  }
+}
+const upload=(file,onp)=>uploadImage(file,{onProgress:onp});
 function embed(u){let m;
   if(m=u.match(/(?:youtu\.be\/|v=|shorts\/)([\w-]{11})/))return`https://www.youtube.com/embed/${m[1]}`;
   if(m=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/))return`https://drive.google.com/file/d/${m[1]}/preview`;
   if(m=u.match(/tiktok\.com\/.*video\/(\d+)/))return`https://www.tiktok.com/embed/v2/${m[1]}`;return null}
-async function cropSquare(file,size=256){const b=await createImageBitmap(file),s=Math.min(b.width,b.height),c=document.createElement("canvas");c.width=c.height=size;
-  c.getContext("2d").drawImage(b,(b.width-s)/2,(b.height-s)/2,s,s,0,0,size,size);return new Promise(r=>c.toBlob(r,"image/jpeg",.85))}
+async function cropSquare(file,size=256){
+  let src,w,h,cleanup=()=>{};
+  try{
+    const b=await createImageBitmap(file);
+    src=b;w=b.width;h=b.height;cleanup=()=>b.close?.();
+  }catch{
+    const url=URL.createObjectURL(file);
+    src=await new Promise((res,rej)=>{
+      const im=new Image();
+      im.onload=()=>res(im);
+      im.onerror=()=>rej(new Error("Không đọc được file ảnh này."));
+      im.src=url;
+    });
+    w=src.naturalWidth;h=src.naturalHeight;cleanup=()=>URL.revokeObjectURL(url);
+  }
+  try{
+    if(!w||!h)throw new Error("Ảnh không hợp lệ (kích thước 0).");
+    const s=Math.min(w,h),c=document.createElement("canvas");
+    c.width=c.height=size;
+    c.getContext("2d").drawImage(src,(w-s)/2,(h-s)/2,s,s,0,0,size,size);
+    const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",.88));
+    if(!blob||!blob.size)throw new Error("Không thể nén/cắt ảnh đại diện.");
+    return new File([blob],(file.name||"avatar").replace(/\.[^.]+$/,"")+".jpg",{type:"image/jpeg"});
+  }finally{cleanup()}
+}
 
 /* ============ #474 – NHẠC NỀN NÂNG CẤP ============ */
 const au=$("#au"),sel=$("#mps");let ti=0,started=false,seekDrag=false;
@@ -393,10 +490,25 @@ let ip="";try{ip=(await (await fetch("https://api.ipify.org?format=json")).json(
 const devId=(()=>{let d=localStorage.getItem("ky_dev");if(!d)localStorage.setItem("ky_dev",d=uid()+uid());return d})();
 const myClassCount=()=>{const c=cfg();if((c.resets||[]).includes(fp))return 0;return S.classes.filter(x=>x.devId===devId||x.fp===fp||(ip&&x.ip===ip)).length};
 const isAdmin=()=>sessionStorage.getItem("ky_admin")==="1";
-const store=(k,v)=>v===undefined?JSON.parse(localStorage.getItem(k)||"null"):localStorage.setItem(k,JSON.stringify(v));
-const canMod=cid=>isAdmin()||sessionStorage.getItem("mod_"+cid)==="1";
+const store=(k,v)=>{try{return v===undefined?JSON.parse(localStorage.getItem(k)||"null"):localStorage.setItem(k,JSON.stringify(v))}catch{return null}};
+const sStore=(k,v)=>{try{return v===undefined?sessionStorage.getItem(k):sessionStorage.setItem(k,String(v))}catch{return null}};
+const CLASS_AUTH_TTL=12*60*60*1000;
+const clearClassAuth=cid=>{try{localStorage.removeItem("in_"+cid)}catch{}};
+const saveClassAuth=(cid,code)=>store("in_"+cid,{code:String(code??"").trim(),exp:Date.now()+CLASS_AUTH_TTL});
+const isClassCreator=c=>!!(c&&!c.ownerMemberId&&c.devId&&c.devId===devId);
+const isClassOwnerMember=c=>!!(c&&c.ownerMemberId&&store("me_"+c.id)===c.ownerMemberId);
+const isClassPassAuthed=cid=>sStore("mod_"+cid)==="1";
+const canMod=cid=>{const c=get("classes",cid);return isAdmin()||isClassOwnerMember(c)||isClassPassAuthed(cid)||isClassCreator(c)};
 const canMem=m=>isAdmin()||sessionStorage.getItem("pin_"+m.id)==="1"||canMod(m.classId);
-const inClass=cid=>isAdmin()||store("in_"+cid)===true;
+const inClass=cid=>{
+  if(isAdmin())return true;
+  const saved=store("in_"+cid);
+  if(!saved)return false;
+  const c=get("classes",cid);
+  const ok=typeof saved==="object"&&typeof saved.exp==="number"&&Date.now()<saved.exp&&!!c&&String(saved.code??"").trim()===String(c.code??"").trim();
+  if(!ok){clearClassAuth(cid);return false}
+  return true;
+};
 
 /* ============ MODAL / SHEET ============ */
 const sheet=(html)=>{$("#modal").innerHTML=`<div class="sheet" onclick="if(event.target===this)closeSheet()"><div>${html}</div></div>`};
@@ -426,12 +538,13 @@ function otpBind(id){
     prev=val;
   }
   real.addEventListener("input",()=>{real.value=real.value.replace(/\D/g,"").slice(0,cells.length);paint()});
+  real.addEventListener("paste",e=>{const txt=(e.clipboardData?.getData("text")||"").replace(/\D/g,"").slice(0,cells.length);if(txt){e.preventDefault();real.value=txt;paint()}});
   real.addEventListener("focus",paint);real.addEventListener("blur",paint);
   // Click on cells focuses input
   cells.forEach(c=>c.addEventListener("click",()=>real.focus()));
   wrap.dataset.bound="1";
 }
-const otpVal=id=>{const r=$("#"+id)?.querySelector(".kyotp-real");return r?r.value:""};
+const otpVal=id=>{const r=$("#"+id)?.querySelector(".kyotp-real");return r?r.value.trim().replace(/\D/g,""):""};
 
 /* OTP FX */
 window.otpFx=async(id,ok)=>{
@@ -551,11 +664,11 @@ function homePage(){
   return`<header class="text-center py-4">
   <div class="fan mb-4" id="kyfan">${fanImgs}</div>
   ${head("Kỷ niệm học sinh","Nơi lưu giữ thanh xuân của từng trường, từng lớp, từng người.")}
-  <div class="kysrc relative text-left" id="kysrc-home">
-    <div class="kysrc-f">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
-      <input class="kysrc-in" type="text" placeholder="Tìm trường hoặc lớp…" id="q" autocomplete="off" spellcheck="false" aria-label="Tìm kiếm">
-    </div>
+  <div class="kysrc relative text-left" id="kysrc-home" data-search>
+    <label class="kysrc-f">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+      <input class="kysrc-in" type="text" role="combobox" aria-expanded="false" aria-autocomplete="list" placeholder="Tìm trường hoặc lớp…" id="q" autocomplete="off" spellcheck="false" aria-label="Tìm kiếm">
+    </label>
     <div class="kysrc-dd" id="sg"><i class="kysrc-pill" aria-hidden="true"></i><div class="kysrc-lb" role="listbox"></div></div>
   </div>
   </header>
@@ -564,16 +677,26 @@ function homePage(){
 
 /* #429 – Search bind nâng cấp */
 function searchBind(w){
-  // Legacy support cho data-search wrap
-  const inp=w.querySelector?.("input")||$("#q");
-  if(!inp)return;
-  const srcWrap=document.getElementById("kysrc-home");if(!srcWrap)return;
+  const srcWrap=w?.classList?.contains("kysrc")?w:document.getElementById("kysrc-home");
+  if(!srcWrap||srcWrap.dataset.bound)return;
+  srcWrap.dataset.bound="1";
   const inpEl=srcWrap.querySelector(".kysrc-in");
   const dd=srcWrap.querySelector(".kysrc-dd");
   const lb=srcWrap.querySelector(".kysrc-lb");
   const pill=srcWrap.querySelector(".kysrc-pill");
+  if(!inpEl||!dd||!lb||!pill)return;
   let list=[],act=-1;
-  function hl(s,t){const i=s.toLowerCase().indexOf(t);return i<0?esc(s):esc(s.slice(0,i))+`<mark>${esc(s.slice(i,i+t.length))}</mark>`+esc(s.slice(i+t.length))}
+  const foldChar=c=>{const f=c.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/đ/g,"d");return /[a-z0-9]/.test(f)?f[0]:" "};
+  const norm=s=>[...String(s??"").normalize("NFC")].map(foldChar).join("").replace(/\s+/g," ").trim();
+  const match=(text,nq,raw)=>{const nt=norm(text);return nq?nt.includes(nq)||nt.replace(/\s+/g,"").includes(nq.replace(/\s+/g,"")):String(text??"").toLowerCase().includes(raw)};
+  function hl(s,rawQ){
+    const chars=[...String(s??"").normalize("NFC")];
+    const folded=chars.map(foldChar).join("");
+    const qf=[...String(rawQ??"").normalize("NFC")].map(foldChar).join("").trim();
+    const idx=qf?folded.indexOf(qf):-1;
+    if(idx<0)return esc(s);
+    return esc(chars.slice(0,idx).join(""))+`<mark>${esc(chars.slice(idx,idx+qf.length).join(""))}</mark>`+esc(chars.slice(idx+qf.length).join(""));
+  }
   function setOpen(open){srcWrap.classList.toggle("is-open",open);inpEl.setAttribute("aria-expanded",open?"true":"false")}
   function paint(jump){
     [...lb.querySelectorAll(".kysrc-o")].forEach((o,i)=>o.setAttribute("aria-selected",i===act?"true":"false"));
@@ -583,17 +706,39 @@ function searchBind(w){
     if(jump){void pill.offsetWidth;pill.style.transition=""}
   }
   function render(){
-    const q=inpEl.value.trim().toLowerCase();
-    if(!q){list=[];setOpen(false);return}
-    list=[...S.schools.filter(s=>slug(s.name).includes(slug(q))).map(s=>({label:s.name,sub:"Trường",href:"#/s/"+s.id})),
-          ...S.classes.filter(c=>slug(c.name).includes(slug(q))).map(c=>({label:c.name+" – "+(get("schools",c.schoolId)?.name||""),sub:"Lớp",href:"#/c/"+c.id}))].slice(0,6);
-    lb.innerHTML=list.length?list.map((x,i)=>`<a href="${x.href}" class="kysrc-o" role="option" aria-selected="false" style="--i:${i}" onclick="this.closest('.kysrc')?.classList.remove('is-open')"><span class="kysrc-t">${hl(x.label,q)}</span><span class="kysrc-m">${esc(x.sub)}</span></a>`).join(""):`<div class="kysrc-no">Không thấy kết quả</div>`;
+    const raw=inpEl.value.trim(),low=raw.toLowerCase(),nq=norm(raw);
+    if(!raw){list=[];act=-1;setOpen(false);return}
+    list=[
+      ...S.schools.filter(s=>match(s.name,nq,low)).map(s=>({label:s.name,sub:"Trường",href:"#/s/"+s.id})),
+      ...S.classes.filter(c=>match(c.name,nq,low)||match(get("schools",c.schoolId)?.name||"",nq,low)).map(c=>({label:c.name+" – "+(get("schools",c.schoolId)?.name||""),sub:"Lớp",href:"#/c/"+c.id}))
+    ].slice(0,6);
+    lb.innerHTML=list.length?list.map((x,i)=>`<a href="${x.href}" class="kysrc-o" role="option" aria-selected="false" style="--i:${i}"><span class="kysrc-t">${hl(x.label,raw)}</span><span class="kysrc-m">${esc(x.sub)}</span></a>`).join(""):`<div class="kysrc-no">Không thấy kết quả</div>`;
     setOpen(true);act=list.length?0:-1;paint(true);
   }
   inpEl.addEventListener("input",render);
   inpEl.addEventListener("focus",()=>{if(inpEl.value.trim())render()});
-  document.addEventListener("click",e=>{if(!srcWrap.contains(e.target))setOpen(false)});
+  inpEl.addEventListener("click",()=>{if(!srcWrap.classList.contains("is-open")&&inpEl.value.trim())render()});
+  inpEl.addEventListener("keydown",e=>{
+    const open=srcWrap.classList.contains("is-open");
+    if((e.key==="ArrowDown"||e.key==="ArrowUp")&&list.length){
+      e.preventDefault();
+      if(!open){render();return}
+      act=(act+(e.key==="ArrowDown"?1:-1)+list.length)%list.length;
+      paint(false);
+    }else if(e.key==="Enter"&&open&&act>=0&&list[act]){
+      e.preventDefault();setOpen(false);location.hash=list[act].href;
+    }else if(e.key==="Escape"&&open){
+      e.preventDefault();setOpen(false);
+    }
+  });
+  lb.addEventListener("pointermove",e=>{
+    const o=e.target.closest(".kysrc-o");if(!o)return;
+    const i=[...lb.children].indexOf(o);
+    if(i>=0&&i!==act){act=i;paint(false)}
+  });
   lb.addEventListener("click",()=>setOpen(false));
+  dd.addEventListener("mousedown",e=>{if(!e.target.closest("a"))e.preventDefault()});
+  document.addEventListener("click",e=>{if(!srcWrap.isConnected)return;if(!srcWrap.contains(e.target))setOpen(false)});
 }
 
 /* #369 – Fan init */
@@ -633,7 +778,7 @@ function schoolPage(id){const s=get("schools",id);if(!s)return"<p>Không tìm th
   return`${crumbs([["Trang chủ","#/"],[s.name]])}${head(s.name)}
   <div class="flex gap-2 items-center my-3"><select class="inp" style="width:auto" onchange="yearF=this.value;route()"><option value="">Mọi niên khóa</option>${years.map(y=>`<option ${y===yearF?"selected":""}>${esc(y)}</option>`).join("")}</select>
   <button class="btn sun ml-auto" onclick="newClass('${id}')">＋ Tạo lớp mới</button></div>
-  <div class="grid gap-3 sm:grid-cols-2">${cl.map(c=>`<a href="#/c/${c.id}" class="card p-3 block"><div class="hand text-3xl">${esc(c.name)}</div><div class="text-sm font-bold">${esc(c.year)}</div><div class="text-sm opacity-70">${esc(c.note)}</div></a>`).join("")||"<p>Chưa có lớp nào.</p>"}</div>
+  <div class="grid gap-3 sm:grid-cols-2">${cl.map(c=>`<a href="#/c/${c.id}" class="card block overflow-hidden">${c.cover?`<div class="h-28 bg-white overflow-hidden"><img loading="lazy" src="${esc(opt(c.cover,500))}" class="w-full h-28 object-cover" onload="this.style.filter='none'" onerror="this.style.filter='none'" style="filter:blur(10px);transition:filter .5s" alt=""></div>`:""}<div class="p-3"><div class="hand text-3xl">${esc(c.name)}</div><div class="text-sm font-bold">${esc(c.year)}</div><div class="text-sm opacity-70">${esc(c.note)}</div></div></a>`).join("")||"<p>Chưa có lớp nào.</p>"}</div>
   ${isAdmin()?`<button class="btn ghost mt-6" onclick="delSchool('${id}')">Xóa trường (Admin)</button>`:""}`}
 window.yearF=yearF;Object.defineProperty(window,"yearF",{get:()=>yearF,set:v2=>yearF=v2});window.route=route;
 window.delSchool=id=>confirmDel(get("schools",id).name,async()=>{await db.del("schools",id);location.hash="#/"});
@@ -641,20 +786,27 @@ window.newClass=sid=>{
   const lim=cfg().limit;if(!isAdmin()&&myClassCount()>=lim)return toast(`Thiết bị này đã tạo đủ ${lim} lớp.`);
   sheet(`<h3 class="hand text-3xl mb-2">Tạo lớp mới</h3>${field("n1","Tên lớp","VD: 12A1")}${field("n2","Niên khóa","VD: 2023–2026")}${field("n3","Ghi chú lớp")}${field("n4","Mật khẩu quản lý lớp","Ghi nhớ kỹ","password")}
   <label class="block mb-3 text-sm font-bold">Ảnh bìa (tùy chọn)<input id="n5" type="file" accept="image/*" class="inp mt-1"></label><button id="nok" class="btn w-full">Tạo lớp</button>`);
-  $("#nok").onclick=async()=>{const n=v("n1"),y=v("n2"),p=v("n4");if(!n||!y||p.length<4)return toast("Nhập tên lớp, niên khóa và mật khẩu ≥ 4 ký tự");
+  $("#nok").onclick=async()=>{const btn=$("#nok"),n=v("n1"),y=v("n2"),p=v("n4");if(!n||!y||p.length<4)return toast("Nhập tên lớp, niên khóa và mật khẩu ≥ 4 ký tự");
     if(S.classes.some(c=>c.schoolId===sid&&c.year===y&&slug(c.name)===slug(n)))return toast("Lớp này đã tồn tại");
-    let cover="";const f=$("#n5").files[0];if(f)cover=await upload(f,()=>{});
-    let code;do code=String(Math.floor(Math.random()*1e5)).padStart(5,"0");while(S.classes.some(c=>c.code===code));
-    const c={id:uid(),schoolId:sid,name:n,year:y,note:v("n3"),cover,code,passHash:await sha(p),music:"",devId,fp,ip};await db.set("classes",c);showInvite(c)}};
+    const prev=btn.innerHTML;btn.disabled=true;btn.textContent="Đang xử lý...";
+    try{
+      let cover="";const f=$("#n5").files[0];if(f)cover=await uploadImage(f,{btn,loadingText:"Đang tải ảnh bìa..."});
+      btn.disabled=true;btn.textContent="Đang tạo lớp...";
+      let code;do code=String(Math.floor(Math.random()*1e5)).padStart(5,"0");while(S.classes.some(c=>c.code===code));
+      const c={id:uid(),schoolId:sid,name:n,year:y,note:v("n3"),cover,code,passHash:await sha(p),music:"",devId,fp,ip};await db.set("classes",c);sStore("mod_"+c.id,"1");showInvite(c);
+    }catch(e){toastErr(e?.message||"Không thể tạo lớp")}
+    finally{if(btn.isConnected){btn.disabled=false;btn.innerHTML=prev}}}};
 function inviteLink(c){const s=get("schools",c.schoolId);return`https://${CONFIG.domain}/?truong=${s?.slug}&lop=${c.id}&code=${c.code}`}
 function showInvite(c){const l=inviteLink(c);sheet(`<h3 class="hand text-3xl">Đã tạo lớp ${esc(c.name)} 🎉</h3><p class="text-sm">Mã lớp của bạn:</p><div class="hand text-6xl text-center my-2 tracking-widest">${c.code}</div>
   <img class="mx-auto border-4 border-white shadow" width="170" height="170" src="https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=${encodeURIComponent(l)}" alt="QR">
   <button class="btn w-full mt-3" onclick="copy('${l}',this)">Sao chép link mời</button><a class="btn sun w-full block text-center mt-2" href="#/c/${c.id}" onclick="closeSheet()">Vào lớp</a>`)}
 
 /* ============ TRANG LỚP ============ */
-function classPage(id){const c=get("classes",id);if(!c)return"<p>Không tìm thấy lớp.</p>";const s=get("schools",c.schoolId);
-  return`${crumbs([["Trang chủ","#/"],[s?.name||"","#/s/"+c.schoolId],[c.name]])}${head(`Lớp ${c.name}`,`${c.year} · ${c.note}`)}
-  <div class="flex gap-2 mb-3 flex-wrap">${store("me_"+id)&&get("members",store("me_"+id))?`<button class="btn sun text-sm" onclick="goMe('${id}')">👤 Trang của tôi</button>`:""}<button class="btn ghost text-sm" onclick="enterCode('${id}')">🔑 Nhập mã lớp</button><button class="btn ghost text-sm" onclick="manage('${id}')">⚙ Quản lý lớp</button></div>
+function classPage(id){const c=get("classes",id);if(!c)return"<p>Không tìm thấy lớp.</p>";const s=get("schools",c.schoolId),mod=canMod(id);
+  return`${crumbs([["Trang chủ","#/"],[s?.name||"","#/s/"+c.schoolId],[c.name]])}
+  ${c.cover?`<div class="mb-3 rounded-2xl overflow-hidden border-2 border-[var(--ink)] bg-white h-36 sm:h-44 shadow"><img loading="lazy" src="${esc(opt(c.cover,900))}" class="w-full h-full object-cover" onload="this.style.filter='none'" onerror="this.style.filter='none'" style="filter:blur(10px);transition:filter .5s" alt="Ảnh bìa lớp ${esc(c.name)}"></div>`:""}
+  ${head(`Lớp ${c.name}`,`${c.year}${c.note?" · "+c.note:""}`)}
+  <div class="flex gap-2 mb-3 flex-wrap items-center">${store("me_"+id)&&get("members",store("me_"+id))?`<button class="btn sun text-sm" onclick="goMe('${id}')">👤 Trang của tôi</button>`:""}<button class="btn ghost text-sm" onclick="enterCode('${id}')">🔑 Nhập mã lớp</button>${mod?`<button class="btn ghost text-sm" onclick="manage('${id}')">⚙ Quản lý lớp</button>`:""}<span id="class-auth-badge" class="text-xs font-bold px-2.5 py-1 rounded-full ${inClass(id)?"":"hidden"}" style="background:#d1fae5;color:#065f46">✔ Đã nhớ mã lớp (12h)</span></div>
   <div id="kytabs-${id}" class="kytab-wrap mb-4">
     <div class="kytab-bar">
       <button class="kytab-btn" data-t="0">Tập thể lớp</button>
@@ -662,7 +814,8 @@ function classPage(id){const c=get("classes",id);if(!c)return"<p>Không tìm th�
       <span class="kytab-pill" id="kytab-pill-${id}"></span>
     </div>
   </div>
-  <div id="pane" style="touch-action:pan-y"></div>`}
+  <div id="pane" style="touch-action:pan-y"></div>
+  ${!mod?`<div class="text-center mt-8"><button class="text-xs underline opacity-60 hover:opacity-100" onclick="manage('${id}')">🔐 Chủ lớp đăng nhập quản lý</button></div>`:""}`}
 
 /* #048 – Bind class với swipe + underline động */
 function bindClass(id){const P=$("#pane");if(!P)return;
@@ -730,7 +883,7 @@ const stk=(n,mod)=>{const h=[...n.id].reduce((a,c)=>a+c.charCodeAt(0),0);return`
 
 const polaroid=(p,own)=>`<figure class="pol" style="position:relative">
   <div class="cursor-zoom-in" data-lb="${p.id}">
-    <img loading="lazy" class="w-full aspect-[4/5] object-cover" src="${esc(opt(p.url,400))}" onload="this.style.filter='none'" style="filter:blur(12px);transition:filter .6s" alt="">
+    <img loading="lazy" class="w-full aspect-[4/5] object-cover" src="${esc(opt(p.url,400))}" onload="this.style.filter='none'" onerror="this.style.filter='none'" style="filter:blur(12px);transition:filter .6s" alt="">
   </div>
   <div class="ky22-wrap absolute bottom-1 left-2">
     <button class="text-sm font-bold" data-heart="${p.id}" style="background:none;border:0;cursor:pointer">❤ <span>${p.hearts||0}</span></button>
@@ -740,9 +893,9 @@ const polaroid=(p,own)=>`<figure class="pol" style="position:relative">
 
 window.delItem=(c,id,l)=>confirmDel(l,async()=>{await db.del(c,id);redraw?.();route()});
 
-function memberTab(id){const ms=by("members","classId",id);
+function memberTab(id){const ms=by("members","classId",id),cls=get("classes",id);
   return`<button class="btn sun w-full mb-3" onclick="newMember('${id}')">＋ Tạo trang cá nhân của bạn</button>
-  <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">${ms.map(m=>`<a href="#/m/${m.id}" data-mid="${m.id}" class="card p-3 text-center block"><div class="w-20 h-20 rounded-full overflow-hidden mx-auto bg-white border-2 border-[var(--ink)]">${m.avatar?`<img loading="lazy" src="${esc(opt(m.avatar,160))}" class="w-full h-full object-cover" alt="${esc(m.name)}">`:""}</div><b class="block mt-2">${esc(m.name)}</b><span class="text-xs opacity-70">${esc(m.quote)}</span></a>`).join("")||"<p>Chưa có thành viên.</p>"}</div>`}
+  <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">${ms.map(m=>`<a href="#/m/${m.id}" data-mid="${m.id}" class="card p-3 text-center block"><div class="w-20 h-20 rounded-full overflow-hidden mx-auto bg-white border-2 border-[var(--ink)]">${m.avatar?`<img loading="lazy" src="${esc(opt(m.avatar,160))}" class="w-full h-full object-cover" alt="${esc(m.name)}">`:""}</div><b class="block mt-2">${esc(m.name)}</b><span class="text-xs opacity-70 block">${esc(m.quote)}</span>${cls?.ownerMemberId===m.id?`<span class="inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-bold" style="background:var(--sun);color:var(--ink)">👑 Quản lý lớp</span>`:""}</a>`).join("")||"<p>Chưa có thành viên.</p>"}</div>`}
 
 function after(id){
   const fi=$("#fi"),dr=$("#drop");
@@ -751,30 +904,52 @@ function after(id){
     dr.ondrop=e=>{e.preventDefault();ups([...e.dataTransfer.files],id,null);dr.classList.remove("is-over")};
     dr.ondragenter=e=>{e.preventDefault();dr.classList.add("is-over")};
     dr.ondragleave=()=>dr.classList.remove("is-over");
-    fi.onchange=()=>ups([...fi.files],id,null);
+    fi.onchange=()=>{ups([...fi.files],id,null);fi.value=""};
   }
   bindGallery();bindMini()}
 
 async function ups(files,cid,mid){
   if(!files.length)return;
   if(!mid&&!inClass(cid))return enterCode(cid);
-  const box=$("#up");if(!box)return;
+  const dr=$("#drop"),box=$("#up");if(!box)return;
   box.innerHTML="";
-  await Promise.all(files.map(async(f,i)=>{
-    // Add row
-    const li=document.createElement("li");li.className="kyup-row";
-    li.innerHTML=`<span class="kyup-name">${esc(f.name)}</span><span class="kyup-pct" id="kyup-pct-${i}">0%</span><span class="kyup-bar" id="kyup-bar-${i}" style="transform:scaleX(0)"></span>`;
-    box.appendChild(li);
-    try{
-      const u=await upload(f,p=>{
-        const bar=document.getElementById("kyup-bar-"+i);const pct=document.getElementById("kyup-pct-"+i);
-        if(bar)bar.style.transform=`scaleX(${p/100})`;if(pct)pct.textContent=Math.round(p)+"%";
-      });
-      li.classList.add("done");const pct=document.getElementById("kyup-pct-"+i);if(pct)pct.textContent="✔";
-      await db.set("photos",{id:uid(),classId:cid,memberId:mid,url:u,hearts:0});
-    }catch{toast("Lỗi tải ảnh")}
-  }));
-  toast("Đã tải ảnh");mid?route():redraw()}
+  dr?.classList.add("is-uploading");
+  let okCount=0,failCount=0,lastErr="";
+  try{
+    await Promise.all(files.map(async(f,i)=>{
+      const li=document.createElement("li");li.className="kyup-row";
+      li.innerHTML=`<div class="flex-1 min-w-0 text-left"><span class="kyup-name block">${esc(f.name)}</span><span class="kyup-err hidden" id="kyup-err-${i}"></span></div><span class="kyup-pct" id="kyup-pct-${i}">0%</span><span class="kyup-bar" id="kyup-bar-${i}" style="transform:scaleX(0)"></span>`;
+      box.appendChild(li);
+      try{
+        const u=await uploadImage(f,{onProgress:p=>{
+          const bar=document.getElementById("kyup-bar-"+i),pct=document.getElementById("kyup-pct-"+i);
+          if(bar)bar.style.transform=`scaleX(${p/100})`;if(pct)pct.textContent=Math.round(p)+"%";
+        }});
+        await db.set("photos",{id:uid(),classId:cid,memberId:mid,url:u,hearts:0});
+        okCount++;
+        li.classList.add("done");const pct=document.getElementById("kyup-pct-"+i);if(pct)pct.textContent="✔";
+      }catch(e){
+        failCount++;
+        lastErr=e?.message||"Lỗi tải ảnh";
+        li.classList.add("fail");
+        const pct=document.getElementById("kyup-pct-"+i),errEl=document.getElementById("kyup-err-"+i);
+        if(pct)pct.textContent="✕";
+        if(errEl){errEl.textContent=lastErr;errEl.classList.remove("hidden")}
+      }
+    }));
+  }finally{
+    dr?.classList.remove("is-uploading");
+  }
+  if(okCount>0&&failCount===0){
+    toast(`Đã tải ${okCount} ảnh ✔`);
+    mid?route():redraw();
+  }else if(okCount>0){
+    toastErr(`Đã tải ${okCount} ảnh, lỗi ${failCount} ảnh: ${lastErr}`);
+    mid?route():redraw();
+  }else{
+    toastErr(lastErr||"Tải ảnh thất bại");
+  }
+}
 
 window.addVideo=async cid=>{if(!inClass(cid))return enterCode(cid);const u=v("vu");if(!embed(u))return toast("Link video không hợp lệ");await db.set("videos",{id:uid(),classId:cid,url:u});redraw()};
 window.addNote=async(cid,b)=>{if(!inClass(cid))return enterCode(cid);const a=v("gn"),t=v("gt");if(!a||!t)return toast("Nhập tên và lời nhắn");b.classList.add("fly");await new Promise(r=>setTimeout(r,700));await db.set("notes",{id:uid(),classId:cid,author:a,text:t,ts:Date.now()});redraw()};
@@ -799,14 +974,14 @@ function openLightbox(list,idx){
     const p=list[i];if(!p)return;
     const ov=document.getElementById("kylb-overlay");
     const imgEl=ov.querySelector("img");
-    if(imgEl){imgEl.src=esc(opt(p.url,1600));imgEl.style.transform=`translate(${tx}px,${ty}px) scale(${z})`}
+    if(imgEl){imgEl.src=opt(p.url,1600);imgEl.style.transform=`translate(${tx}px,${ty}px) scale(${z})`}
   }
   if(document.getElementById("kylb-overlay")){document.getElementById("kylb-overlay").remove()}
   const ov=document.createElement("div");ov.id="kylb-overlay";
   ov.innerHTML=`<img src="${esc(opt(list[i].url,1600))}" alt="" style="max-width:92vw;max-height:92vh;border-radius:8px;user-select:none"><div class="kylb-zoom-label">2× zoom</div><button id="kylb-prev" aria-label="Trước">‹</button><button id="kylb-next" aria-label="Sau">›</button><button id="kylb-close" aria-label="Đóng">✕</button>`;
   document.body.appendChild(ov);
   const imgEl=ov.querySelector("img");
-  function go(d){i=(i+d+list.length)%list.length;z=1;tx=0;ty=0;imgEl.src=esc(opt(list[i].url,1600));imgEl.style.transform=""}
+  function go(d){i=(i+d+list.length)%list.length;z=1;tx=0;ty=0;imgEl.src=opt(list[i].url,1600);imgEl.style.transform=""}
   document.getElementById("kylb-prev").onclick=e=>{e.stopPropagation();go(-1)};
   document.getElementById("kylb-next").onclick=e=>{e.stopPropagation();go(1)};
   document.getElementById("kylb-close").onclick=()=>ov.remove();
@@ -827,55 +1002,242 @@ function openLightbox(list,idx){
 function bindMini(){$$(".vw").forEach(w=>{const ph=w.parentElement;new IntersectionObserver(([e])=>{w.classList.toggle("mini",!e.isIntersecting&&e.boundingClientRect.top<0);ph.style.minHeight=w.classList.contains("mini")?ph.offsetHeight+"px":""},{threshold:.1}).observe(ph)})}
 
 /* ============ MÃ LỚP ============ */
-window.enterCode=cid=>{const c=get("classes",cid);
+window.enterCode=cid=>{const c=get("classes",cid);if(!c)return toastErr("Không tìm thấy lớp.");
+  if(!inClass(cid))$("#class-auth-badge")?.classList.add("hidden");
   sheet(`<h3 class="hand text-3xl">Nhập mã lớp 5 số</h3>${otp(5,"oc")}
-  <button id="ok" class="btn w-full">Xác nhận</button>`);
+  <button id="ok" type="button" class="btn w-full">Xác nhận</button>`);
   otpBind("oc");
   const r=$("#oc")?.querySelector(".kyotp-real");if(r)r.focus();
-  $("#ok").onclick=async()=>{const good=otpVal("oc")===c.code;await otpFx("oc",good);if(good){store("in_"+cid,true);closeSheet();toast("Đã xác thực lớp ✔");redraw?.()}else toast("Mã lớp không đúng")}};
+  $("#ok").onclick=async()=>{const good=otpVal("oc").trim()===String(c.code??"").trim();await otpFx("oc",good);if(good){saveClassAuth(cid,c.code);closeSheet();toast("Đã xác thực lớp & ghi nhớ 12 giờ ✔");$("#class-auth-badge")?.classList.remove("hidden");redraw?.()}else toastErr("Mã lớp không đúng")}};
 
-window.manage=cid=>{const c=get("classes",cid);
-  if(!canMod(cid))return sheet(`<h3 class="hand text-3xl mb-2">Quản lý lớp</h3>${field("mp","Mật khẩu quản lý lớp","","password")}<button id="ok" class="btn w-full">Đăng nhập</button>`),
-    $("#ok").onclick=async()=>{if(c.pass===v("mp")||c.passHash===await sha(v("mp"))){sessionStorage.setItem("mod_"+cid,"1");manage(cid)}else toast("Sai mật khẩu")};
+/* ============ COMPONENT: CLASS MANAGEMENT MODAL ============ */
+function confirmTransferClass(cid,target){
+  const c=get("classes",cid);
+  if(!c||!target)return;
+  sheet(`<h3 class="hand text-3xl mb-2">Xác nhận chuyển quyền</h3>
+    <p class="text-sm mb-4 leading-relaxed">Bạn chắc chắn muốn chuyển quyền quản lý lớp <b>${esc(c.name)}</b> cho <b>${esc(target.name)}</b>? Sau khi chuyển, bạn sẽ không còn quyền quản lý lớp này nữa.</p>
+    <p id="ct-err" class="text-sm font-bold mb-2 hidden" style="color:var(--coral)"></p>
+    <div class="flex gap-2">
+      <button id="ct-cancel" type="button" class="btn ghost flex-1">Hủy</button>
+      <button id="ct-ok" type="button" class="btn flex-1" style="background:var(--coral)">Xác nhận chuyển</button>
+    </div>`);
+  $("#ct-cancel").onclick=()=>ClassManagementModal(cid);
+  const okBtn=$("#ct-ok"),errEl=$("#ct-err");
+  okBtn.onclick=async()=>{
+    if(okBtn.disabled)return;
+    const prev=okBtn.innerHTML;okBtn.disabled=true;okBtn.textContent="Đang chuyển...";
+    try{
+      const prevOwnerId=c.ownerMemberId||"";
+      c.ownerMemberId=target.id;
+      await db.set("classes",c);
+      if(prevOwnerId&&prevOwnerId!==target.id){
+        const prevM=get("members",prevOwnerId);
+        if(prevM){prevM.role="member";await db.set("members",prevM)}
+      }
+      const freshTarget=get("members",target.id);
+      if(freshTarget){freshTarget.role="owner";await db.set("members",freshTarget)}
+      try{sessionStorage.removeItem("mod_"+cid)}catch{}
+      closeSheet();
+      toast(`Đã chuyển quyền quản lý lớp cho ${target.name} ✔`);
+      route();
+    }catch(e){
+      if(errEl){errEl.textContent=e?.message||"Không thể chuyển quyền.";errEl.classList.remove("hidden")}
+      toastErr(e?.message||"Không thể chuyển quyền.");
+    }finally{if(okBtn.isConnected){okBtn.disabled=false;okBtn.innerHTML=prev}}
+  };
+}
+
+function ClassManagementModal(cid){
+  const c=get("classes",cid);
+  if(!c)return toastErr("Không tìm thấy dữ liệu lớp.");
+  if(!canMod(cid)){
+    const owner=c.ownerMemberId?get("members",c.ownerMemberId):null;
+    const byOwnerPin=!!owner;
+    sheet(`<h3 class="hand text-3xl mb-1">Quản lý lớp ${esc(c.name)}</h3>
+      <p class="text-xs opacity-70 mb-3">${byOwnerPin?`Lớp hiện do <b>${esc(owner.name)}</b> quản lý. Nhập mã PIN cá nhân của ${esc(owner.name)} để mở khóa Quản lý lớp.`:`Nhập mật khẩu quản trị lớp do người tạo lớp đặt lúc tạo lớp.`}</p>
+      ${field("mp",byOwnerPin?`Mã PIN của ${esc(owner.name)}`:"Mật khẩu quản lý lớp","","password")}
+      <p id="cm-login-err" class="text-sm font-bold mb-2 hidden" style="color:var(--coral)"></p>
+      <button id="ok" type="button" class="btn w-full">Đăng nhập quản lý</button>`);
+    const mpEl=$("#mp"),okBtn=$("#ok"),errEl=$("#cm-login-err");
+    if(byOwnerPin)mpEl?.setAttribute("inputmode","numeric");
+    mpEl?.focus();
+    const doLogin=async()=>{
+      const pw=v("mp");
+      if(!pw){errEl.textContent=byOwnerPin?"Vui lòng nhập mã PIN.":"Vui lòng nhập mật khẩu.";errEl.classList.remove("hidden");return}
+      const prev=okBtn.innerHTML;okBtn.disabled=true;okBtn.textContent="Đang kiểm tra...";
+      try{
+        const match=byOwnerPin
+          ?((owner.pin&&owner.pin===pw)||(owner.pinHash&&owner.pinHash===await sha(pw)))
+          :((c.pass&&c.pass===pw)||(c.passHash&&c.passHash===await sha(pw)));
+        if(!match){errEl.textContent=byOwnerPin?"Sai mã PIN cá nhân.":"Sai mật khẩu quản lý lớp.";errEl.classList.remove("hidden");return}
+        if(byOwnerPin){store("me_"+cid,owner.id);sStore("pin_"+owner.id,"1")}
+        sStore("mod_"+cid,"1");
+        await route();
+        ClassManagementModal(cid);
+      }catch(e){toastErr(e?.message||"Lỗi xác thực")}
+      finally{if(okBtn.isConnected){okBtn.disabled=false;okBtn.innerHTML=prev}}
+    };
+    okBtn.onclick=doLogin;
+    mpEl?.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();doLogin()}});
+    return;
+  }
+
   const l=inviteLink(c);
-  sheet(`<h3 class="hand text-3xl">Quản lý lớp ${esc(c.name)}</h3><p class="text-sm">Mã lớp:</p><div class="hand text-5xl tracking-widest">${c.code}</div>
-  <div class="flex gap-2 my-3 flex-wrap"><button class="btn" onclick="copy('${l}',this)">Sao chép link mời</button><button class="btn ghost" onclick="regen('${cid}')">Tạo lại mã lớp</button></div>
-  <img width="140" height="140" src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(l)}" alt="QR" class="mb-3">
-  ${field("ee1","Tên lớp","")}${field("ee2","Ghi chú lớp","")}${field("ee3","Link nhạc MP3 riêng","https://…/bai-hat.mp3")}
-  <button id="sv" class="btn sun w-full mb-2">Lưu thay đổi</button>${isAdmin()||true?`<button class="btn w-full" style="background:var(--coral)" id="dc">Xóa lớp</button>`:""}`);
-  $("#ee1").value=c.name;$("#ee2").value=c.note;$("#ee3").value=c.music||"";
-  $("#sv").onclick=async()=>{Object.assign(c,{name:v("ee1")||c.name,note:v("ee2"),music:v("ee3")});await db.set("classes",c);closeSheet();toast("Đã lưu");route()};
-  $("#dc").onclick=()=>confirmDel(c.name,async()=>{for(const k of["members","photos","videos","notes"])for(const x of by(k,"classId",cid))await db.del(k,x.id);await db.del("classes",cid);location.hash="#/s/"+c.schoolId})};
-window.regen=async cid=>{const c=get("classes",cid);let n;do n=String(Math.floor(Math.random()*1e5)).padStart(5,"0");while(S.classes.some(x=>x.code===n));c.code=n;await db.set("classes",c);toast("Đã đổi mã lớp");manage(cid)};
+  const ownerObj=c.ownerMemberId?get("members",c.ownerMemberId):null;
+  const roleLabel=isClassOwnerMember(c)?`👑 Chủ lớp (${esc(ownerObj?.name||"Thành viên")})`:isClassCreator(c)?"👑 Người tạo lớp":isClassPassAuthed(cid)?"🔑 Quản trị lớp":"🛡 Admin tổng";
+  const otherMembers=by("members","classId",cid).filter(m=>m.id!==c.ownerMemberId);
+  sheet(`<div class="flex items-center justify-between gap-2 mb-3">
+      <h3 class="hand text-3xl leading-none">Quản lý lớp ${esc(c.name)}</h3>
+      <span class="text-xs font-bold px-2.5 py-1 rounded-full shrink-0" style="background:var(--sun);color:var(--ink)">${roleLabel}</span>
+    </div>
+    <div class="card p-3 mb-4" style="box-shadow:none">
+      <div class="flex items-center justify-between gap-3 flex-wrap">
+        <div>
+          <div class="text-xs font-bold opacity-70">MÃ LỚP 5 SỐ</div>
+          <div class="hand text-5xl tracking-widest leading-tight">${esc(c.code)}</div>
+        </div>
+        <img width="96" height="96" class="rounded-lg border border-black/10 bg-white" src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(l)}" alt="QR">
+      </div>
+      <div class="flex gap-2 mt-3 flex-wrap">
+        <button type="button" class="btn sun text-xs" onclick="copy('${esc(c.code)}',this)">📋 Sao chép mã</button>
+        <button type="button" class="btn text-xs" onclick="copy('${esc(l)}',this)">🔗 Sao chép link mời</button>
+        <button type="button" class="btn ghost text-xs" onclick="regen('${cid}')">🔄 Tạo lại mã mới</button>
+      </div>
+    </div>
+    <div class="mb-3">
+      <div class="text-sm font-bold mb-1">Ảnh bìa lớp</div>
+      <div id="ee-cover-prev" class="w-full h-32 rounded-xl overflow-hidden border-2 border-[var(--ink)] bg-white mb-2 flex items-center justify-center text-xs opacity-70">
+        ${c.cover?`<img src="${esc(opt(c.cover,600))}" class="w-full h-full object-cover" alt="Ảnh bìa lớp">`:`<span>Chưa có ảnh bìa</span>`}
+      </div>
+      <input id="ee-cover" type="file" accept="image/*" class="inp text-sm">
+    </div>
+    ${field("ee-name","Tên lớp","VD: 12A1")}
+    ${field("ee-year","Niên khóa","VD: 2023–2026")}
+    <label class="block mb-3 text-sm font-bold">Ghi chú lớp<textarea id="ee-note" class="inp mt-1 font-normal" rows="3" placeholder="Lời nhắn chung của lớp..."></textarea></label>
+    ${field("ee-music","Link nhạc MP3 riêng (tùy chọn)","https://…/bai-hat.mp3")}
+    <p id="cm-err" class="text-sm font-bold text-center mb-2 hidden" style="color:var(--coral)"></p>
+    <button id="sv" type="button" class="btn sun w-full mb-4">💾 Lưu thay đổi</button>
+    <div class="card p-3 mb-4" style="box-shadow:none">
+      <div class="text-sm font-bold mb-1">👑 Chuyển quyền quản trị lớp</div>
+      ${ownerObj?`<p class="text-xs opacity-75 mb-2">Quản trị viên lớp hiện tại: <b>${esc(ownerObj.name)}</b></p>`:""}
+      ${otherMembers.length?`
+        <select id="cm-transfer-sel" class="inp text-sm mb-2">
+          <option value="">-- Chọn thành viên nhận quyền --</option>
+          ${otherMembers.map(m=>`<option value="${esc(m.id)}">${esc(m.name)}${m.quote?" · "+esc(m.quote.slice(0,28)):""}</option>`).join("")}
+        </select>
+        <button id="cm-transfer-btn" type="button" class="btn ghost w-full text-sm">Chuyển quyền</button>
+      `:`<p class="text-xs opacity-70">Chưa có thành viên khác trong lớp để chuyển quyền.</p>`}
+    </div>
+    <button id="dc" type="button" class="btn w-full" style="background:var(--coral)">🗑 Xóa lớp</button>`);
+
+  $("#ee-name").value=c.name||"";
+  $("#ee-year").value=c.year||"";
+  $("#ee-note").value=c.note||"";
+  $("#ee-music").value=c.music||"";
+
+  const coverInp=$("#ee-cover"),coverPrev=$("#ee-cover-prev");
+  let previewUrl="";
+  coverInp?.addEventListener("change",()=>{
+    const f=coverInp.files?.[0];
+    if(previewUrl){URL.revokeObjectURL(previewUrl);previewUrl=""}
+    if(f){previewUrl=URL.createObjectURL(f);coverPrev.innerHTML=`<img src="${previewUrl}" class="w-full h-full object-cover" alt="Xem trước ảnh bìa">`}
+  });
+
+  const svBtn=$("#sv"),errBox=$("#cm-err");
+  const showCmErr=msg=>{if(errBox){errBox.textContent=msg;errBox.classList.remove("hidden")}toastErr(msg)};
+  svBtn.onclick=async()=>{
+    if(svBtn.disabled)return;
+    if(errBox){errBox.textContent="";errBox.classList.add("hidden")}
+    const prev=svBtn.innerHTML;
+    svBtn.disabled=true;svBtn.textContent="Đang kiểm tra...";
+    try{
+      const name=($("#ee-name")?.value||"").trim();
+      const year=($("#ee-year")?.value||"").trim();
+      const note=($("#ee-note")?.value||"").trim();
+      const music=($("#ee-music")?.value||"").trim();
+      if(!name)return showCmErr("Vui lòng nhập tên lớp.");
+      if(!year)return showCmErr("Vui lòng nhập niên khóa.");
+      if(S.classes.some(x=>x.id!==c.id&&x.schoolId===c.schoolId&&slug(x.year)===slug(year)&&slug(x.name)===slug(name))){
+        return showCmErr("Đã tồn tại lớp trùng tên và niên khóa trong trường này.");
+      }
+      let nextCover=c.cover||"";
+      const f=coverInp?.files?.[0];
+      if(f)nextCover=await uploadImage(f,{btn:svBtn,loadingText:"Đang tải ảnh bìa..."});
+      svBtn.disabled=true;svBtn.textContent="Đang lưu thay đổi...";
+      Object.assign(c,{name,year,note,music,cover:nextCover});
+      await db.set("classes",c);
+      if(previewUrl){URL.revokeObjectURL(previewUrl);previewUrl=""}
+      closeSheet();toast("Đã lưu thông tin lớp ✔");route();
+    }catch(e){showCmErr(e?.message||"Không thể lưu thay đổi lớp.")}
+    finally{if(svBtn.isConnected){svBtn.disabled=false;svBtn.innerHTML=prev}}
+  };
+
+  $("#cm-transfer-btn")?.addEventListener("click",()=>{
+    const targetId=$("#cm-transfer-sel")?.value;
+    if(!targetId)return toastErr("Vui lòng chọn thành viên nhận quyền.");
+    const target=get("members",targetId);
+    if(!target)return toastErr("Không tìm thấy thành viên đã chọn.");
+    confirmTransferClass(cid,target);
+  });
+
+  $("#dc").onclick=()=>confirmDel(c.name,async()=>{
+    for(const k of["members","photos","videos","notes"])for(const x of by(k,"classId",cid))await db.del(k,x.id);
+    await db.del("classes",cid);location.hash="#/s/"+c.schoolId;
+  });
+}
+window.manage=cid=>ClassManagementModal(cid);
+window.regen=async cid=>{const c=get("classes",cid);let n;do n=String(Math.floor(Math.random()*1e5)).padStart(5,"0");while(S.classes.some(x=>x.code===n));c.code=n;await db.set("classes",c);clearClassAuth(cid);$("#class-auth-badge")?.classList.add("hidden");toast("Đã tạo mã lớp mới ✔");ClassManagementModal(cid)};
 
 /* ============ THÀNH VIÊN ============ */
 window.newMember=(cid,prefill="")=>{
+  const authed=inClass(cid);
   sheet(`<h3 class="hand text-3xl mb-2">Trang cá nhân của bạn</h3>
   ${field("mn","Họ và tên *")}
   <label class="block mb-3 text-sm font-bold">Ghi chú / trích dẫn kỷ yếu<textarea id="mq" class="inp mt-1 font-normal" rows="4" placeholder="Quote: 'Hãy sống hết mình...'\nZalo: 0912...\nFacebook: fb.com/...\nSở thích: ..."></textarea></label>
   <label class="block mb-3 text-sm font-bold">Ảnh đại diện<input id="ma" type="file" accept="image/*" class="inp mt-1"></label>
-  <p class="text-sm font-bold">Mã lớp 5 số</p>${otp(5,"mc",prefill)}
+  <div id="mc-wrap">${authed?`<div class="px-3 py-2 rounded-xl text-sm font-bold mb-1" style="background:#d1fae5;color:#065f46">✔ Đã xác thực mã lớp (tự động ghi nhớ 12 giờ)</div>`:`<p class="text-sm font-bold">Mã lớp 5 số</p>${otp(5,"mc",prefill)}`}</div>
   <p class="text-sm font-bold mt-3">Mã PIN cá nhân (4–6 số)</p>
   ${pinPad("mpin",6)}
-  <button id="ok" class="btn sun w-full mt-3">Tạo trang</button>`);
-  otpBind("mc");
-  setTimeout(()=>bindPinPad("mpin",6),50);
-  const sp=()=>document.getElementById("mpin");
-  $("#ok").onclick=async()=>{
-    const c=get("classes",cid),pin=sp()?.value||"";
-    if(!v("mn"))return toast("Nhập họ tên");
-    if(otpVal("mc")!==c.code){otpFx("mc",false);return toast("Mã lớp không đúng")}
-    if(pin.length<4)return toast("PIN cần 4–6 số");
-    let av="";const f=$("#ma").files[0];
-    if(f){
-      // #069 crop flow – open crop sheet
-      av=await new Promise(async res=>{
-        const cropped=await cropSquare(f);res(await upload(cropped,()=>{}));
-      });
-    }
-    const mq=document.getElementById("mq")?.value||"";
-    const m={id:uid(),classId:cid,name:v("mn"),quote:mq,pinHash:await sha(pin),avatar:av};
-    await db.set("members",m);store("in_"+cid,true);store("me_"+cid,m.id);sessionStorage.setItem("pin_"+m.id,"1");closeSheet();location.hash="#/m/"+m.id}};
+  <p id="nm-err" class="text-sm font-bold text-center mt-2 hidden" style="color:var(--coral)"></p>
+  <button id="ok" type="button" class="btn sun w-full mt-3">Tạo trang</button>`);
+  if(!authed)otpBind("mc");
+  bindPinPad("mpin",6);
+  const modalBox=$("#modal"),sp=()=>document.getElementById("mpin"),okBtn=modalBox.querySelector("#ok"),errBox=modalBox.querySelector("#nm-err");
+  const showErr=msg=>{if(errBox){errBox.textContent=msg;errBox.classList.remove("hidden")}toastErr(msg)};
+  okBtn.onclick=async()=>{
+    if(okBtn.disabled)return;
+    if(errBox){errBox.textContent="";errBox.classList.add("hidden")}
+    const prev=okBtn.innerHTML;
+    try{
+      const name=(modalBox.querySelector("#mn")?.value||"").trim();
+      const c=get("classes",cid);
+      const pin=(sp()?.value||"").trim();
+      if(!c)throw new Error("Không tìm thấy dữ liệu lớp. Vui lòng tải lại trang.");
+      if(!name)return showErr("Vui lòng nhập họ và tên.");
+      if(!inClass(cid)){
+        const mcWrap=modalBox.querySelector("#mc-wrap");
+        if(!modalBox.querySelector("#mc")){
+          if(mcWrap){mcWrap.innerHTML=`<p class="text-sm font-bold">Mã lớp 5 số</p>${otp(5,"mc","")}`;otpBind("mc")}
+          $("#class-auth-badge")?.classList.add("hidden");
+          return showErr("Mã lớp đã hết hạn 12 giờ hoặc đã được đổi. Vui lòng nhập lại mã lớp.");
+        }
+        const codeInput=otpVal("mc").trim();
+        if(codeInput!==String(c.code??"").trim()){otpFx("mc",false);return showErr("Mã lớp 5 số không đúng.")}
+        saveClassAuth(cid,c.code);
+        $("#class-auth-badge")?.classList.remove("hidden");
+      }
+      if(pin.length<4)return showErr("Mã PIN cần ít nhất 4 số.");
+      okBtn.disabled=true;okBtn.textContent="Đang tạo trang...";
+      let av="";const f=modalBox.querySelector("#ma")?.files?.[0];
+      if(f)av=await uploadImage(f,{crop:true,size:256,btn:okBtn,loadingText:"Đang tải ảnh đại diện..."});
+      okBtn.disabled=true;okBtn.textContent="Đang lưu hồ sơ...";
+      const mq=(modalBox.querySelector("#mq")?.value||"").trim();
+      const m={id:uid(),classId:cid,name,quote:mq,pinHash:await sha(pin),avatar:av};
+      await db.set("members",m);
+      store("me_"+cid,m.id);sStore("pin_"+m.id,"1");
+      closeSheet();location.hash="#/m/"+m.id;
+    }catch(e){showErr(e?.message||"Có lỗi xảy ra khi tạo trang cá nhân.")}
+    finally{if(okBtn.isConnected){okBtn.disabled=false;okBtn.innerHTML=prev}}}};
 
 function memberPage(id){const m=get("members",id);if(!m)return"<p>Không tìm thấy.</p>";const c=get("classes",m.classId),own=canMem(m),ph=by("photos","memberId",id);
   return`${crumbs([["Trang chủ","#/"],[c.name,"#/c/"+c.id],[m.name]])}<div class="text-center"><div class="w-28 h-28 rounded-full overflow-hidden mx-auto bg-white border-4 border-white shadow">${m.avatar?`<img loading="lazy" src="${esc(opt(m.avatar,240))}" class="w-full h-full object-cover" alt="${esc(m.name)}">`:""}</div>${head(m.name,m.quote)}</div>
@@ -885,38 +1247,50 @@ function memberPage(id){const m=get("members",id);if(!m)return"<p>Không tìm th
 
 document.addEventListener("DOMContentLoaded",()=>{});
 new MutationObserver(()=>{
-  const m=location.hash.match(/#\/m\/(\w+)/);if(!m)return;
+  const m=location.hash.match(/#\/m\/([^/]+)/);if(!m)return;
   const fi=$("#fi"),dr=$("#drop");
   if(fi&&dr&&!dr.dataset.b){dr.dataset.b=1;const mm=get("members",m[1]);
     dr.onclick=e=>{if(!e.target.closest("#up"))fi.click()};
     dr.ondrop=e=>{e.preventDefault();ups([...e.dataTransfer.files],mm.classId,mm.id);dr.classList.remove("is-over")};
     dr.ondragenter=e=>{e.preventDefault();dr.classList.add("is-over")};
     dr.ondragleave=()=>dr.classList.remove("is-over");
-    fi.onchange=()=>ups([...fi.files],mm.classId,mm.id)}
+    fi.onchange=()=>{ups([...fi.files],mm.classId,mm.id);fi.value=""}}
   if($("[data-lb]")&&!$("[data-lb]").dataset.b){$$("[data-lb]").forEach(x=>x.dataset.b=1);bindGallery()}
 }).observe($("#app"),{childList:true});
 
 window.pinLogin=id=>{
   const m=get("members",id);
-  sheet(`<h3 class="hand text-3xl mb-2">Nhập mã PIN cá nhân</h3>${pinPad("lpin",6)}`);
-  setTimeout(()=>{
-    bindPinPad("lpin",6);
-    const lpin=document.getElementById("lpin");
-    lpin.addEventListener("change",async()=>{
-      if(await sha(lpin.value)===m.pinHash){
+  sheet(`<h3 class="hand text-3xl mb-2">Nhập mã PIN cá nhân</h3>${pinPad("lpin",6)}<button id="lpin-ok" type="button" class="btn sun w-full mt-2">Xác nhận PIN</button>`);
+  bindPinPad("lpin",6);
+  const lpin=document.getElementById("lpin"),okBtn=document.getElementById("lpin-ok");
+  const verifyPin=async()=>{
+    if(!lpin.value||lpin.value.length<4)return toast("PIN cần ít nhất 4 số");
+    try{
+      const ok=(m.pin&&m.pin===lpin.value)||(m.pinHash&&m.pinHash===await sha(lpin.value));
+      if(ok){
         lpin._pinOk?.();
         await new Promise(r=>setTimeout(r,900));
-        sessionStorage.setItem("pin_"+id,"1");store("me_"+m.classId,id);closeSheet();route();
-      } else {lpin._pinBad?.();toast("PIN không đúng")}
-    });
-  },50)};
+        sStore("pin_"+id,"1");store("me_"+m.classId,id);closeSheet();route();
+      }else{lpin._pinBad?.();toastErr("PIN không đúng")}
+    }catch(e){lpin._pinBad?.();toastErr(e?.message||"Lỗi kiểm tra PIN")}
+  };
+  lpin.addEventListener("change",verifyPin);
+  okBtn?.addEventListener("click",verifyPin);
+};
 
 window.editMember=id=>{const m=get("members",id);
   sheet(`<h3 class="hand text-3xl mb-2">Sửa trang cá nhân</h3>${field("e1","Họ và tên")}
   <label class="block mb-3 text-sm font-bold">Ghi chú / trích dẫn<textarea id="e2" class="inp mt-1 font-normal" rows="4" placeholder="Quote: ...\nZalo: ...\nFacebook: ...\nSở thích: ..."></textarea></label>
   <label class="block mb-3 text-sm font-bold">Đổi ảnh đại diện<input id="e3" type="file" accept="image/*" class="inp mt-1"></label><button id="ok" class="btn w-full">Lưu</button>`);
   $("#e1").value=m.name;document.getElementById("e2").value=m.quote||"";
-  $("#ok").onclick=async()=>{const f=$("#e3").files[0];if(f)m.avatar=await upload(await cropSquare(f),()=>{});m.name=v("e1")||m.name;m.quote=document.getElementById("e2")?.value||m.quote;await db.set("members",m);closeSheet();route()}};
+  $("#ok").onclick=async()=>{const btn=$("#ok"),f=$("#e3").files[0],prev=btn.innerHTML;btn.disabled=true;btn.textContent="Đang lưu...";
+    try{
+      let nextAv=m.avatar||"";if(f)nextAv=await uploadImage(f,{crop:true,size:256,btn,loadingText:"Đang tải ảnh đại diện..."});
+      btn.disabled=true;btn.textContent="Đang lưu hồ sơ...";
+      m.avatar=nextAv;m.name=v("e1")||m.name;m.quote=document.getElementById("e2")?.value??m.quote;
+      await db.set("members",m);closeSheet();toast("Đã lưu hồ sơ ✔");route();
+    }catch(e){toastErr(e?.message||"Không thể lưu hồ sơ")}
+    finally{if(btn.isConnected){btn.disabled=false;btn.innerHTML=prev}}}};
 
 /* ============ ADMIN ============ */
 function adminPage(){
@@ -956,7 +1330,14 @@ window.adLogin=()=>{if(v("ap")===CONFIG.adminPass){sessionStorage.setItem("ky_ad
 window.setLim=async()=>{const c=cfg();c.limit=Math.max(1,+v("lim")||1);await db.set("settings",c);toast("Đã lưu")};
 window.resetDev=async()=>{const c=cfg();c.resets=[...(c.resets||[]),fp];await db.set("settings",c);toast("Đã mở khóa")};
 window.editSchool=id=>{const s=id?get("schools",id):{id:uid(),name:"",cover:""};sheet(`<h3 class="hand text-3xl mb-2">${id?"Sửa":"Thêm"} trường</h3>${field("sn","Tên trường")}<label class="block mb-3 text-sm font-bold">Logo / ảnh bìa<input id="sc" type="file" accept="image/*" class="inp mt-1"></label><button id="ok" class="btn w-full">Lưu</button>`);$("#sn").value=s.name;
-  $("#ok").onclick=async()=>{if(!v("sn"))return;s.name=v("sn");s.slug=slug(s.name);const f=$("#sc").files[0];if(f)s.cover=await upload(f,()=>{});await db.set("schools",s);closeSheet();route()}};
+  $("#ok").onclick=async()=>{if(!v("sn"))return toast("Nhập tên trường");const btn=$("#ok"),prev=btn.innerHTML;btn.disabled=true;btn.textContent="Đang lưu...";
+    try{
+      s.name=v("sn");s.slug=slug(s.name);const f=$("#sc").files[0];
+      if(f)s.cover=await uploadImage(f,{btn,loadingText:"Đang tải ảnh bìa..."});
+      btn.disabled=true;btn.textContent="Đang lưu trường...";
+      await db.set("schools",s);closeSheet();toast("Đã lưu trường ✔");route();
+    }catch(e){toastErr(e?.message||"Không thể lưu trường")}
+    finally{if(btn.isConnected){btn.disabled=false;btn.innerHTML=prev}}}};
 
 /* Hook vào route để init storage bar và fan */
 const _origRoute=route;
@@ -972,7 +1353,7 @@ const q=new URLSearchParams(location.search);
 if(q.get("lop")&&get("classes",q.get("lop"))){
   const cid=q.get("lop"),code=q.get("code")||"";
   history.replaceState(null,"",location.pathname+"#/c/"+cid);tab=1;await route();
-  if(get("classes",cid).code===code)store("in_"+cid,true);
+  if(code&&String(get("classes",cid)?.code??"").trim()===String(code).trim()){saveClassAuth(cid,code);$("#class-auth-badge")?.classList.remove("hidden")}
   setTimeout(()=>newMember(cid,code),400);
 } else route();
 </script></body></html>
